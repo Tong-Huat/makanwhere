@@ -11,7 +11,7 @@
 
 body {
   min-height: 100vh;
-  background-color: rgb(231, 222, 208);
+  background-color: rgb(240, 153, 13);
   margin: 0 auto;
   text-align: center;
 }
@@ -110,6 +110,20 @@ h1 {
   .nav {
     flex-direction: column;
   }
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 @media (min-width: 768px) {
