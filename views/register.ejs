@@ -1,0 +1,30 @@
+<%- include('header', {title: `User Registration`}); -%>
+
+
+
+  <h1 style="text-align: center">User Registration</h1>
+
+  <div class="form-signin bg-light">
+    <form action="/signup" method="POST">
+      <img class="mb-4" src="/img/CF_Mark.jpeg" alt="" width="72">
+      <h2 class="h3 mb-3 fw-normal">Please fill in the following to sign up</h2>
+
+      <div class="form-floating">
+        <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating">
+        <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <label for="floatingPassword">Set Password</label>
+      </div>
+
+      <!-- <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div> -->
+      <button class="w-100 btn btn-lg btn-dark" type="submit">Register</button>
+    </form>
+  </div>
+
+  <%- include('footer'); -%>

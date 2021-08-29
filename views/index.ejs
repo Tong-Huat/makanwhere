@@ -1,0 +1,44 @@
+<%- include('header', {title: `Establishments Record`}); -%>
+  <h1>Establishments Record</h1>
+  <table class="table table-striped table-sm table-responsive-md">
+    <thead>
+      <tr class="thead">
+        <th scope="col">Index</th>
+        <th scope="col">Name</th>
+        <th scope="col">Zone</th>
+        <th scope="col">Ratings</th>
+        <th scope="col">Actions</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Create an row for each sighting -->
+      <% for (let i=0; i < data.length; i +=1) {%>
+        <tr>
+          <th scope="row" class="theader">
+            <%= data[i].id %>
+          </th>
+          <td class="tdata">
+            <a href="<%= `/listing/${data[i].id}` %>">
+              <%= data[i].name %>
+            </a>
+          </td>
+          <td class="tdata">
+            <%= data[i].zone %>
+          </td>
+          <td class="tdata">
+            <%= data[i].ratings %>
+          </td>
+          <td>
+            <form action="/note/<%= data[i].id %>?_method=DELETE" method="POST">
+              <input type="submit" value="Delete" />
+            </form>
+          </td>
+
+        </tr>
+        <% }; %>
+    </tbody>
+  </table>
+
+
+  <%- include('footer'); -%>
