@@ -96,8 +96,57 @@ const registerUser = (request, response) => {
   });
 };
 
+const renderLogin = (request, response) => {
+  console.log('login request came in');
+  response.render('login');
+};
+
+// CB to verify login details and login to acct if successful verification
+const loginAccount = (request, response) => {
+  console.log('trying to login');
+  const values = [request.body.username];
+  console.log(values);
+  pool.query('SELECT * FROM users WHERE username=$1', values, (error, result) => {
+    if (error) {
+      console.log('Error executing query', error);
+      response.status(503).send('request failed');
+      return;
+    }
+
+    //  we didnt find a user with that email.
+    if (result.rows.length === 0) {
+      /* the error for password and user are the same. don't tell the user which error they got for security reasons, otherwise people can guess if a person is a user of a given service. */
+      response.status(403).send('sorry!');
+      return;
+    }
+
+    // create new SHA object
+    const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+    shaObj.update(request.body.password);
+    const hashedPassword = shaObj.getHash('HEX');
+    console.log(hashedPassword);
+    if (result.rows[0].password === hashedPassword) {
+      response.cookie('loggedIn', true);
+
+      const shaObj1 = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+      // create an unhashed cookie string based on user ID and salt
+      const unhashedCookieString = `${result.rows[0].id}-${SALT}`;
+      shaObj1.update(unhashedCookieString);
+      const hashedCookieString = shaObj1.getHash('HEX');
+      response.cookie('loggedInHash', hashedCookieString);
+      response.cookie('userId', result.rows[0].id);
+      response.redirect('/listings');
+    } else {
+      response.status(403).send('not successful');
+    }
+  });
+};
+
 app.get('/', renderWelcomePage);
 app.get('/listings', renderEstIndex);
 app.get('/register', renderRegistration);
 app.post('/register', registerUser);
+app.get('/login', renderLogin);
+app.post('/login', loginAccount);
+
 app.listen(3004);
