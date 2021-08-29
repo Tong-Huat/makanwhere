@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS establishments (id SERIAL PRIMARY KEY, name TEXT, add
 
 CREATE TABLE IF NOT EXISTS cuisines (id SERIAL PRIMARY KEY, cuisine TEXT);
 
-CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT, password TEXT, contact NUMERIC(8));
+CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT, password TEXT, contact NUMERIC(8), email TEXT);
 
 CREATE TABLE IF NOT EXISTS establishments_ratings (id SERIAL PRIMARY KEY, establishment_id INTEGER, user_id INTEGER, rating INTEGER);
 

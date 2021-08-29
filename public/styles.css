@@ -24,6 +24,94 @@ body {
   user-select: none;
 }
 
+.table {
+  width: 100%;
+}
+
+.theader {
+  color: aliceblue;
+}
+.thead,
+.tdata {
+  color: aliceblue;
+}
+.tdata > a,
+.shape-report {
+  color: antiquewhite;
+}
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.list-group {
+  max-width: 250px;
+  margin: auto;
+  opacity: 0.7;
+  color: red;
+}
+
+h1 {
+  padding: 30px;
+  color: rgb(24, 46, 46);
+}
+
+.shape-text {
+  text-align: justify;
+}
+
+.table {
+  width: 80%;
+  margin: auto;
+}
+
+.copyright {
+  margin-top: 10rem;
+}
+
+.submit-label {
+  text-align: left;
+  color: blanchedalmond;
+}
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+  color: #212121;
+  border: 4px solid #ff993b;
+  border-radius: 25px;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+@media screen and (max-width: 576px) {
+  .nav {
+    flex-direction: column;
+  }
+}
+
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
