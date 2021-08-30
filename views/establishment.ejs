@@ -1,0 +1,45 @@
+<%- include('header', {title: `Bird Note`}); -%>
+
+  <div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold">EsT name</h1>
+      <p class="col-md-8 fs-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas sint, vero dicta officia
+        impedit, labore blanditiis dolore veritatis sit eligendi nihil autem veniam ea! Repellendus aliquid eum quidem
+        totam quaerat? </p>
+    </div>
+  </div>
+
+  <div class="row align-items-md-stretch">
+    <div class="col-md-6 ">
+      <div class="h-100 p-5 text-white bg-dark rounded-3">
+
+        <div class=" col-md-6 mb-3 submit-label">
+          <label for="name" class="form-label">Name</label>
+          <textarea disabled class="form-control" name="name" rows="1"><%= data[0].name %></textarea>
+        </div>
+        <div class="col-md-3 mb-3 submit-label">
+          <label for="Address" class="form-label">Address</label>
+          <textarea disabled class="form-control" name="Address" rows="1"><%= data[0].address %></textarea>
+        </div>
+        <div class="col-md-5 mb-3 submit-label">
+          <label for="zone" class="form-label">Zone</label>
+          <textarea disabled class="form-control" name="zone" rows="1"><%= data[0].zone %></textarea>
+        </div>
+        <div class="col-md-5 mb-3 submit-label">
+          <label for="cuisine" class="form-label">Cuisine</label>
+          <textarea disabled class="form-control" name="cuisine" rows="1">Cuisine <%= data[0].cuisine %></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="h-100 p-5 bg-light border rounded-3">
+        <h2>Login</h2>
+        <p>For existing members <br><button class="btn btn-outline-secondary loginbtn" type="button"> <a
+              href="/login">Login</a> </button><br>
+          here!
+        </p>
+
+      </div>
+    </div>
+  </div>
+  <%- include('footer'); -%>

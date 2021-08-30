@@ -17,6 +17,35 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
+const zones = [('Raffles Place, Cecil, Marina, People\'s Park'),
+  ('Anson, Tanjong Pagar'),
+  ('Queenstown, Tiong Bahru'),
+  ('Telok Blangah, Harbourfront'),
+  ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
+  ('High Street, Beach Road (part)'),
+  ('Middle Road, Golden Mile'),
+  ('Little India'),
+  ('Orchard, Cairnhill, River Valley'),
+  ('Ardmore, Bukit Timah, Holland Road, Tanglin'),
+  ('Watten Estate, Novena, Thomson'),
+  ('Balestier, Toa Payoh, Serangoon'),
+  ('Macpherson, Braddell'),
+  ('Geylang, Eunos'),
+  ('Katong, Joo Chiat, Amber Road'),
+  ('Bedok, Upper East Coast, Eastwood, Kew Drive'),
+  ('Loyang, Changi'),
+  ('Tampines, Pasir Ris'),
+  ('Serangoon Garden, Hougang, Punggol'),
+  ('Bishan, Ang Mo Kio'),
+  ('Upper Bukit Timah, Clementi Park, Ulu Pandan'),
+  ('Jurong'),
+  ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
+  ('Lim Chu Kang, Tengah'),
+  ('Kranji, Woodgrove'),
+  ('Upper Thomson, Springleaf'),
+  ('Yishun, Sembawang'),
+  ('Seletar')];
+
 // Initialise DB connection
 const { Pool } = pg;
 let pgConnectionConfigs;
@@ -109,7 +138,9 @@ const renderWelcomePage = (request, response) => {
 // CB to render all listing page
 const renderEstIndex = (request, response) => {
   console.log('index request came in');
-
+  const zoneData = { zones };
+  console.log(zoneData);
+  console.log(zoneData.zones.length);
   const listAllEstablishment = (error, result) => {
     const data = result.rows;
     if (error) {
@@ -122,7 +153,7 @@ const renderEstIndex = (request, response) => {
     // console.log(`result: ${dataObj}`);
 
     // response.send(data);
-    response.render('index', dataObj);
+    response.render('index', { dataObj, zoneData });
   };
 
   // Query using pg.Pool instead of pg.Client
@@ -238,12 +269,62 @@ const logout = (request, response) => {
   response.redirect('/');
 };
 
+const renderEstablishment = (request, response) => {
+  console.log('est request came in');
+  const { id } = request.params;
+
+  const listSpecificEst = (error, result) => {
+    console.log(id);
+    console.log(result);
+    const data = result.rows;
+    console.log(data);
+
+    if (error) {
+      console.log('Error executing query', error.stack);
+      response.status(503).send(result.rows);
+    }
+    const dataObj = { data };
+    // console.log(`result: ${dataObj}`);
+
+    response.render('establishment', dataObj);
+  };
+  // Query using pg.Pool instead of pg.Client
+  pool.query(`SELECT *, cuisines.cuisine FROM establishments INNER JOIN cuisines ON cuisines.id = establishments.cuisine_id WHERE establishments.id = ${id}`, listSpecificEst);
+};
+
+// CB to del note
+const deleteEst = (request, response) => {
+  // Remove element from DB at given index
+  const { id } = request.params;
+  console.log('id:', id);
+  const getNoteDataQuery = `SELECT * FROM establishments WHERE id = ${id}`;
+  pool.query(getNoteDataQuery, (getNoteDataQueryErr, getNoteDataQueryResult) => {
+    if (getNoteDataQueryErr) {
+      console.log('error', getNoteDataQueryErr);
+    } else {
+      const noteData = getNoteDataQueryResult.rows[0];
+      console.log('note Data: ', noteData);
+
+      const deleteNoteQuery = `DELETE FROM establishments WHERE id = ${id}`;
+      pool.query(deleteNoteQuery, (deleteNoteError, deleteNoteResult) => {
+        if (deleteNoteError) {
+          console.log('error', deleteNoteError);
+        } else
+        {
+          response.redirect('/');
+        }
+      });
+    }
+  });
+};
 app.get('/', renderWelcomePage);
 app.get('/listing', restrictToLoggedIn, renderEstIndex);
 app.get('/register', renderRegistration);
 app.post('/register', registerUser);
 app.get('/login', renderLogin);
 app.post('/login', loginAccount);
-// logs the user out
 app.get('/logout', logout);
+app.get('/listing/:id', renderEstablishment);
+// line 301 not completed
+app.delete('/listing/:id', deleteEst);
 app.listen(3004);
