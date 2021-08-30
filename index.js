@@ -373,7 +373,26 @@ const addEst = (request, response) => {
 };
 
 const renderEditPage = (request, response) => {
+  console.log('edit request came in');
+  const { id } = request.params;
 
+  const listSpecificEst = (error, result) => {
+    console.log(id);
+    console.log(result);
+    const data = result.rows;
+    console.log(data);
+
+    if (error) {
+      console.log('Error executing query', error.stack);
+      response.status(503).send(result.rows);
+    }
+    const dataObj = { data };
+    // console.log(`result: ${dataObj}`);
+
+    response.render('editEst', dataObj);
+  };
+  // Query using pg.Pool instead of pg.Client
+  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, listSpecificEst);
 };
 
 app.get('/', renderWelcomePage);
@@ -389,4 +408,5 @@ app.delete('/listing/:id', deleteEst);
 app.get('/add', renderAddEst);
 app.post('/add', addEst);
 app.get('/listing/:id/edit', renderEditPage);
+// edit render done, post pending
 app.listen(3004);
