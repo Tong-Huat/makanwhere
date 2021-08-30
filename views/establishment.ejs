@@ -1,4 +1,4 @@
-<%- include('header', {title: `Bird Note`}); -%>
+<%- include('header', {title: `Est Info`}); -%>
 
   <div class="p-5 mb-4 bg-light rounded-3">
     <div class="container-fluid py-5">
@@ -16,7 +16,7 @@
           <label for="Address" class="form-label">Address</label>
           <textarea disabled class="form-control" name="Address" rows="3"><%= data[0].address %></textarea>
         </div>
-        <div class="col-md-5 mb-3 submit-label">
+        <div class="col-md-8 mb-3 submit-label">
           <label for="zone" class="form-label">Zone</label>
           <textarea disabled class="form-control" name="zone" rows="1"><%= data[0].zone %></textarea>
         </div>
@@ -29,13 +29,13 @@
     <div class="col-md-6">
       <div class="h-100 p-5 bg-light border rounded-3">
 
-        <div class="col-md-5 mb-3 submit-label">
+        <div class="col-md-7 mb-3 submit-label">
           <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
-          <textarea disabled class="form-control" name="cuisine" rows="1"> <%= data[0].cuisine %></textarea>
+          <textarea disabled class="form-control" name="cuisine" rows="2"> <%= data[0].cuisine %></textarea>
         </div>
         <div class="col-md-5 mb-3 submit-label">
           <label for="ratings" class="form-label" style="color:black">Ratings</label>
-          <textarea disabled class="form-control" name="ratings" rows="1"> <%= data[0].ratings %></textarea>
+          <textarea disabled class="form-control" name="ratings" rows="1"> To be advised</textarea>
         </div>
         <div class="col-md-5 mb-3 submit-label">
           <label for="comments" class="form-label" style="color:black">comments</label>

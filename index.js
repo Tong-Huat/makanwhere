@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import express, { request, response } from 'express';
 import methodOverride from 'method-override';
 // eslint-disable-next-line import/no-unresolved
@@ -280,7 +281,7 @@ const renderEstablishment = (request, response) => {
     response.render('establishment', dataObj);
   };
   // Query using pg.Pool instead of pg.Client
-  pool.query(`SELECT *, cuisines.cuisine FROM establishments INNER JOIN cuisines ON cuisines.id = establishments.cuisine_id WHERE establishments.id = ${id}`, listSpecificEst);
+  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, listSpecificEst);
 };
 
 // CB to del note
@@ -309,11 +310,11 @@ const deleteEst = (request, response) => {
   });
 };
 
-const addEst = (request, response) => {
+const renderAddEst = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
     const dataObj = { data };
-    console.log(data[0]);
+    // console.log(data[0]);
     const zoneData = { zones };
     console.log(zoneData.zones.length);
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
@@ -322,6 +323,57 @@ const addEst = (request, response) => {
       response.render('addEsta', { dataObj, zoneData, cuisineData });
     });
   });
+};
+
+const addEst = (request, response) => {
+  const { userId } = request.cookies;
+  console.log(`userId:${userId}`);
+  const { name } = request.body;
+  const { address } = request.body;
+  const { zone } = request.body;
+  const { cuisines } = request.body;
+  console.log('cuisines:', cuisines);
+  const { contact } = request.body;
+  const { email } = request.body;
+  const addQuery = `INSERT INTO establishments (name, address, zone, cuisine, contact, email, user_id) VALUES ('${name}','${address}','${zone}','${cuisines}','${contact}','${email}','${userId}') returning id`;
+  // const estData = request.body;
+  // console.log('estdata', estData);
+  // const inputData = [estData.name, estData.address, estData.zone, estData.cuisines, estData.contact, estData.email, userId];
+  // const addQuery = 'INSERT INTO establishments (name, address, zone, cuisine, contact, email, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) returning id';
+  pool.query(addQuery, (addError, addResult) => {
+    if (addError) {
+      console.log('error', addError);
+    } else {
+      console.log('est id:', addResult.rows);
+      const estId = addResult.rows[0].id;
+      cuisines.forEach((cuisine) => {
+        const cuisineIdQuery = `SELECT id FROM cuisines WHERE cuisine = '${cuisine}'`;
+        pool.query(cuisineIdQuery, (cuisineIdQueryError, cuisineIdQueryResult) => {
+          if (cuisineIdQueryError) {
+            console.log('error:', cuisineIdQueryError);
+          } else {
+            const cuisineId = cuisineIdQueryResult.rows.id;
+            const cuisineData = [estId, cuisineId];
+
+            const estCuisinesEntry = 'INSERT INTO establishments_cuisines (establishment_id, cuisine_id) VALUES ($1, $2)';
+
+            pool.query(estCuisinesEntry, cuisineData, (estCuisinesEntryError, estCuisinesEntryResult) => {
+              if (estCuisinesEntryError) {
+                console.log('error', estCuisinesEntryError);
+              } else {
+                console.log('done');
+              }
+            });
+          }
+        });
+      });
+      response.redirect('/listing');
+    }
+  });
+};
+
+const renderEditPage = (request, response) => {
+
 };
 
 app.get('/', renderWelcomePage);
@@ -334,5 +386,7 @@ app.get('/logout', logout);
 app.get('/listing/:id', renderEstablishment);
 // line 301 not completed
 app.delete('/listing/:id', deleteEst);
-app.get('/add', addEst);
+app.get('/add', renderAddEst);
+app.post('/add', addEst);
+app.get('/listing/:id/edit', renderEditPage);
 app.listen(3004);
