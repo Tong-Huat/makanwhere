@@ -1,0 +1,56 @@
+<%- include('header', {title: `Add Establishment`}); -%>
+
+  <h1 style="text-align: center">Add New Establishment</h1>
+  <div class="container">
+    <form action="/listing" method="POST">
+      <div class="col-md-4 mb-3 submit-label">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" rows="3">
+      </div>
+      <div class="col-md-4 mb-3 submit-label">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" name="address" rows="3">
+      </div>
+      <div class="col-md-12 mb-3 submit-label">
+        <label for="zones" class="form-label">Zones</label>
+        <br>
+        <select name="zone">
+          <% zoneData.zones.forEach((zone)=> { %>
+            <option value="<%= zone %>">
+              <%= zone %>
+                (<%= zone %>)
+            </option>
+            <% }); %>
+        </select>
+      </div>
+      <div class="col-md-12 mb-3 submit-label">
+        <label for="cuisine" class="form-label">Cuisine</label>
+        <br>
+        <% cuisineData.cuisines.forEach((cuisine)=> { %>
+          <label>
+            <%= cuisine.cuisine %>
+          </label>
+          <input type="checkbox" name="cuisine" value="<%= cuisineData.cuisines.cuisine %>" />
+          <% }); %>
+      </div>
+      <div class="col-md-3 mb-3 submit-label">
+        <label for="contact" class="form-label">Contact</label>
+        <input type="tel" pattern="[0-9]{8}" required placeholder="12345678" class="form-control" name="contact"
+          rows="1">
+      </div>
+      <div class="col-md-3 mb-3 submit-label">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" rows="1">
+      </div>
+      <div class="col-md-12">
+        <input type="submit" value="Submit">
+      </div>
+      <br>
+      <div class="col-md-12">
+        <input type="reset">
+      </div>
+      <br>
+      <br>
+      <br>
+
+      <%- include('footer'); -%>

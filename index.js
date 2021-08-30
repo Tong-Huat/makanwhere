@@ -137,27 +137,18 @@ const renderWelcomePage = (request, response) => {
 
 // CB to render all listing page
 const renderEstIndex = (request, response) => {
-  console.log('index request came in');
-  const zoneData = { zones };
-  console.log(zoneData);
-  console.log(zoneData.zones.length);
-  const listAllEstablishment = (error, result) => {
+  pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
-    if (error) {
-      console.log('Error executing query', error.stack);
-      response.status(503).send(result.rows);
-      return;
-    }
-    console.log(data);
     const dataObj = { data };
-    // console.log(`result: ${dataObj}`);
-
-    // response.send(data);
-    response.render('index', { dataObj, zoneData });
-  };
-
-  // Query using pg.Pool instead of pg.Client
-  pool.query('SELECT * from establishments', listAllEstablishment);
+    console.log(data[0]);
+    const zoneData = { zones };
+    console.log(zoneData.zones.length);
+    pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
+      const cuisineData = { cuisines: cuisineResult.rows };
+      console.log(cuisineData);
+      response.render('index', { dataObj, zoneData, cuisineData });
+    });
+  });
 };
 
 // CB to render registration page
@@ -317,6 +308,22 @@ const deleteEst = (request, response) => {
     }
   });
 };
+
+const addEst = (request, response) => {
+  pool.query('SELECT * from Establishments', (error, result) => {
+    const data = result.rows;
+    const dataObj = { data };
+    console.log(data[0]);
+    const zoneData = { zones };
+    console.log(zoneData.zones.length);
+    pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
+      const cuisineData = { cuisines: cuisineResult.rows };
+      console.log(cuisineData);
+      response.render('addEsta', { dataObj, zoneData, cuisineData });
+    });
+  });
+};
+
 app.get('/', renderWelcomePage);
 app.get('/listing', restrictToLoggedIn, renderEstIndex);
 app.get('/register', renderRegistration);
@@ -327,4 +334,5 @@ app.get('/logout', logout);
 app.get('/listing/:id', renderEstablishment);
 // line 301 not completed
 app.delete('/listing/:id', deleteEst);
+app.get('/add', addEst);
 app.listen(3004);

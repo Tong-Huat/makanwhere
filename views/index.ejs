@@ -11,10 +11,12 @@
   <br>
   <label for="cuisine">Select from cusine:</label>
   <select name="cuisine" id="cuisine">
-    <option value="volvo">Chinese</option>
-    <option value="western">western</option>
-    <option value="Viet">Mercedes</option>
-    <option value="Thai">Audi</option>
+    <% for (let i=0; i < cuisineData.cuisines.length; i +=1) {%>
+      <option value="<% cuisineData.cuisines[i].cuisine %>">
+        <%= cuisineData.cuisines[i].cuisine %>
+      </option>
+      <% } %>
+
   </select>
   <table class="table table-striped table-sm table-responsive-md">
     <thead>
@@ -32,7 +34,7 @@
       <% for (let i=0; i < dataObj.data.length; i +=1) {%>
         <tr>
           <th scope="row" class="theader">
-            <%= i %>
+            <%= i+1 %>
           </th>
           <td class="tdata">
             <a href="<%= `/listing/${dataObj.data[i].id}` %>">
