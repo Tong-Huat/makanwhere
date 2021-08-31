@@ -404,6 +404,17 @@ const editPage = (request, response) => {
   });
 };
 
+const renderSurprise = (request, response) => {
+  response.render('surprise');
+};
+
+const renderReservationForm = (request, response) => {
+  const { id } = request.params;
+  const dataId = { id };
+  console.log(id);
+  response.render('reservation', dataId);
+};
+
 app.get('/', renderWelcomePage);
 app.get('/listing', restrictToLoggedIn, renderEstIndex);
 app.get('/register', renderRegistration);
@@ -412,11 +423,14 @@ app.get('/login', renderLogin);
 app.post('/login', loginAccount);
 app.get('/logout', logout);
 app.get('/listing/:id', renderEstablishment);
-// line 301 not completed
 app.delete('/listing/:id', deleteEst);
 app.get('/add', renderAddEst);
+// addEst got bug, cannot add 1 cuisine only
 app.post('/add', addEst);
 app.get('/listing/:id/edit', renderEditPage);
 app.put('/listing/:id/edit', editPage);
-// edit render done, post pending
+app.get('/surprise', renderSurprise);
+// app.post surprise to be completed
+app.get('/listing/:id/reservation', renderReservationForm);
+// app.post reservation to be completed
 app.listen(3004);
