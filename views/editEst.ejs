@@ -3,18 +3,15 @@
     <div class="p-5 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">
-          <textarea class="form-control" name="name" rows="3"><%= dataObj.data[0].name %></textarea>
+          <textarea class="form-control" name="name" rows="3" required><%= dataObj.data[0].name %></textarea>
         </h1>
-
-
       </div>
     </div>
-
     <div class="row align-items-md-stretch">
       <div class="col-md-6 ">
         <div class="h-100 p-5 text-white bg-dark rounded-3">
           <div class="col-md-6 mb-3 submit-label">
-            <label for="Address" class="form-label">Address</label>
+            <label for="Address" class="form-label" required>Address</label>
             <textarea class="form-control" name="address" rows="3"><%= dataObj.data[0].address %></textarea>
           </div>
           <div class="col-md-8 mb-3 submit-label">
@@ -23,7 +20,7 @@
           </div>
           <div class="col-md-5 mb-3 submit-label">
             <label for="contact" class="form-label">Contact Number</label>
-            <textarea class="form-control" name="contact" rows="1"> <%= dataObj.data[0].contact %></textarea>
+            <textarea class="form-control" name="contact" rows="1" required> <%= dataObj.data[0].contact %></textarea>
           </div>
         </div>
       </div>
