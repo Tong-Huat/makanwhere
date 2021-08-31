@@ -5,16 +5,16 @@
     <form action="/add" method="POST">
       <div class="col-md-4 mb-3 submit-label">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" name="name" rows="3">
+        <input type="text" class="form-control" name="name" rows="3" required>
       </div>
       <div class="col-md-4 mb-3 submit-label">
-        <label for="address" class="form-label">Address</label>
+        <label for="address" class="form-label" required>Address</label>
         <input type="text" class="form-control" name="address" rows="3">
       </div>
       <div class="col-md-12 mb-3 submit-label">
         <label for="zones" class="form-label">Zones</label>
         <br>
-        <select name="zone">
+        <select name="zone" required>
           <% zoneData.zones.forEach((zone)=> { %>
             <option value="<%= zone %>">
               <%= zone %>
@@ -40,7 +40,7 @@
       </div>
       <div class="col-md-3 mb-3 submit-label">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" name="email" rows="1">
+        <input type="email" class="form-control" name="email" required rows="1">
       </div>
       <div class="col-md-12">
         <input type="submit" value="Submit">

@@ -1,38 +1,48 @@
 <%- include('header', {title: `Est Info`}); -%>
-  <form action="/listing/<%= data[0].id %>/edit" method="POST">
+  <form action="/listing/<%= dataObj.data[0].id %>/edit?_method=PUT" method="POST">
     <div class="p-5 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">
-          <textarea class="form-control" name="Address" rows="3"><%= data[0].name %></textarea>
+          <textarea class="form-control" name="name" rows="3" required><%= dataObj.data[0].name %></textarea>
         </h1>
-
-
       </div>
     </div>
-
     <div class="row align-items-md-stretch">
       <div class="col-md-6 ">
         <div class="h-100 p-5 text-white bg-dark rounded-3">
           <div class="col-md-6 mb-3 submit-label">
             <label for="Address" class="form-label">Address</label>
-            <textarea class="form-control" name="Address" rows="3"><%= data[0].address %></textarea>
+            <textarea required class="form-control" name="address" rows="3"><%= dataObj.data[0].address %></textarea>
           </div>
-          <div class="col-md-8 mb-3 submit-label">
-            <label for="zone" class="form-label">Zone</label>
-            <textarea class="form-control" name="zone" rows="1"><%= data[0].zone %></textarea>
+          <div class="col-md-12 mb-3 submit-label">
+            <label for="zones" class="form-label">Zones</label>
+            <br>
+            <select name="zone" required>
+              <% zoneData.zones.forEach((zone)=> { %>
+                <option value="<%= zone %>">
+                  <%= zone %>
+                    (<%= zone %>)
+                </option>
+                <% }); %>
+            </select>
           </div>
           <div class="col-md-5 mb-3 submit-label">
             <label for="contact" class="form-label">Contact Number</label>
-            <textarea class="form-control" name="contact" rows="1"> <%= data[0].contact %></textarea>
+            <textarea class="form-control" name="contact" required rows="1"> <%= dataObj.data[0].contact %></textarea>
           </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">
-
-          <div class="col-md-7 mb-3 submit-label">
-            <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
-            <textarea class="form-control" name="cuisine" rows="2"> <%= data[0].cuisine %></textarea>
+          <div class="col-md-12 mb-3 submit-label">
+            <label for="cuisine" class="form-label" style="color: black">Cuisine</label>
+            <br>
+            <% cuisineData.cuisines.forEach((cuisine)=> { %>
+              <label>
+                <%= cuisine.cuisine %>
+              </label>
+              <input type="checkbox" name="cuisines" required style="color:black" value="<%=  cuisine.cuisine %>" />
+              <% }); %>
           </div>
           <div class="col-md-5 mb-3 submit-label">
             <label for="ratings" class="form-label" style="color:black">Ratings</label>

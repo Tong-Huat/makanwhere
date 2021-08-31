@@ -7,5 +7,3 @@ INSERT INTO establishments_ratings (establishment_id, user_id, rating) VALUES (1
 
 INSERT INTO comments (establishment_id, user_id, comment) VALUES (1,1,'Food was nice'),(2,3,'Food is ok but place is noisy'),(3,2,'Avg food, expected something better.');
 
-
-
