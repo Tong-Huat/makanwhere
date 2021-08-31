@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 import express, { request, response } from 'express';
 import methodOverride from 'method-override';
@@ -20,22 +22,17 @@ app.use(cookieParser());
 
 const zones = [('Raffles Place, Cecil, Marina, People\'s Park'),
   ('Anson, Tanjong Pagar'),
-  ('Queenstown, Tiong Bahru'),
-  ('Telok Blangah, Harbourfront'),
+  ('Queenstown, Tiong Bahru, Telok Blangah, Harbourfront'),
   ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
-  ('High Street, Beach Road (part)'),
-  ('Middle Road, Golden Mile'),
+  ('High Street, Beach Road, Middle Road, Golden Mile'),
   ('Little India'),
   ('Orchard, Cairnhill, River Valley'),
   ('Ardmore, Bukit Timah, Holland Road, Tanglin'),
   ('Watten Estate, Novena, Thomson'),
-  ('Balestier, Toa Payoh, Serangoon'),
-  ('Macpherson, Braddell'),
-  ('Geylang, Eunos'),
-  ('Katong, Joo Chiat, Amber Road'),
+  ('Balestier, Toa Payoh, Serangoon, Macpherson, Braddell'),
+  ('Geylang, Eunos, Katong, Joo Chiat, Amber Road'),
   ('Bedok, Upper East Coast, Eastwood, Kew Drive'),
-  ('Loyang, Changi'),
-  ('Tampines, Pasir Ris'),
+  ('Loyang, Changi, Tampines, Pasir Ris'),
   ('Serangoon Garden, Hougang, Punggol'),
   ('Bishan, Ang Mo Kio'),
   ('Upper Bukit Timah, Clementi Park, Ulu Pandan'),
@@ -43,8 +40,7 @@ const zones = [('Raffles Place, Cecil, Marina, People\'s Park'),
   ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
   ('Lim Chu Kang, Tengah'),
   ('Kranji, Woodgrove'),
-  ('Upper Thomson, Springleaf'),
-  ('Yishun, Sembawang'),
+  ('Upper Thomson, Springleaf, Yishun, Sembawang'),
   ('Seletar')];
 
 // Initialise DB connection
@@ -303,7 +299,7 @@ const deleteEst = (request, response) => {
           console.log('error', deleteNoteError);
         } else
         {
-          response.redirect('/');
+          response.redirect('/listing');
         }
       });
     }
@@ -336,10 +332,7 @@ const addEst = (request, response) => {
   const { contact } = request.body;
   const { email } = request.body;
   const addQuery = `INSERT INTO establishments (name, address, zone, cuisine, contact, email, user_id) VALUES ('${name}','${address}','${zone}','${cuisines}','${contact}','${email}','${userId}') returning id`;
-  // const estData = request.body;
-  // console.log('estdata', estData);
-  // const inputData = [estData.name, estData.address, estData.zone, estData.cuisines, estData.contact, estData.email, userId];
-  // const addQuery = 'INSERT INTO establishments (name, address, zone, cuisine, contact, email, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) returning id';
+  console.log('error1');
   pool.query(addQuery, (addError, addResult) => {
     if (addError) {
       console.log('error', addError);
@@ -348,6 +341,8 @@ const addEst = (request, response) => {
       const estId = addResult.rows[0].id;
       cuisines.forEach((cuisine) => {
         const cuisineIdQuery = `SELECT id FROM cuisines WHERE cuisine = '${cuisine}'`;
+        console.log('error2');
+
         pool.query(cuisineIdQuery, (cuisineIdQueryError, cuisineIdQueryResult) => {
           if (cuisineIdQueryError) {
             console.log('error:', cuisineIdQueryError);
@@ -356,6 +351,7 @@ const addEst = (request, response) => {
             const cuisineData = [estId, cuisineId];
 
             const estCuisinesEntry = 'INSERT INTO establishments_cuisines (establishment_id, cuisine_id) VALUES ($1, $2)';
+            console.log('error3');
 
             pool.query(estCuisinesEntry, cuisineData, (estCuisinesEntryError, estCuisinesEntryResult) => {
               if (estCuisinesEntryError) {
@@ -375,24 +371,35 @@ const addEst = (request, response) => {
 const renderEditPage = (request, response) => {
   console.log('edit request came in');
   const { id } = request.params;
-
-  const listSpecificEst = (error, result) => {
+  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, (error, result) => {
     console.log(id);
-    console.log(result);
+    const zoneData = { zones };
     const data = result.rows;
     console.log(data);
-
-    if (error) {
-      console.log('Error executing query', error.stack);
-      response.status(503).send(result.rows);
-    }
     const dataObj = { data };
-    // console.log(`result: ${dataObj}`);
+    // console.log(data[0]);
+    console.log(zoneData.zones.length);
+    pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
+      const cuisineData = { cuisines: cuisineResult.rows };
+      console.log(cuisineData);
+      response.render('editEst', { dataObj, zoneData, cuisineData });
+    });
+  });
+};
 
-    response.render('editEst', dataObj);
-  };
-  // Query using pg.Pool instead of pg.Client
-  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, listSpecificEst);
+const editPage = (request, response) => {
+  const { id } = request.params;
+  const data = request.body;
+  console.log(data);
+  const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', zone = '${data.zone}', contact = '${data.contact}', cuisine = '${data.cuisine}' WHERE id = ${id} RETURNING *`;
+  pool.query(editQuery, (editQueryError, editQueryResult) => {
+    if (editQueryError) {
+      console.log('error', editQueryError);
+    } else {
+      console.log(editQueryResult.rows);
+      response.redirect('/listing');
+    }
+  });
 };
 
 app.get('/', renderWelcomePage);
@@ -408,5 +415,6 @@ app.delete('/listing/:id', deleteEst);
 app.get('/add', renderAddEst);
 app.post('/add', addEst);
 app.get('/listing/:id/edit', renderEditPage);
+app.put('/listing/:id/edit', editPage);
 // edit render done, post pending
 app.listen(3004);
