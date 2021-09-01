@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS establishments_ratings;
 DROP TABLE IF EXISTS establishments_cuisines;
 DROP TABLE IF EXISTS comments;
 
-CREATE TABLE IF NOT EXISTS establishments (id SERIAL PRIMARY KEY, name TEXT, address TEXT, zone TEXT, cuisine text, contact NUMERIC(8), email TEXT, user_id INTEGER);
+CREATE TABLE IF NOT EXISTS establishments (id SERIAL PRIMARY KEY, name TEXT, address TEXT, area TEXT, cuisine text, contact NUMERIC(8), email TEXT, user_id INTEGER);
 
 CREATE TABLE IF NOT EXISTS cuisines (id SERIAL PRIMARY KEY, cuisine TEXT);
 

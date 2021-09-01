@@ -1,10 +1,10 @@
 <%- include('header', {title: `Establishments Record`}); -%>
   <h1>Establishments Record</h1>
-  <label for="zone">Select from zone:</label>
-  <select name="zone" id="zone">
-    <% for (let i=0; i < zoneData.zones.length; i +=1) {%>
-      <option value="<% zoneData.zones[i] %>">
-        <%= zoneData.zones[i] %>
+  <label for="area">Select from area:</label>
+  <select name="area" id="area">
+    <% for (let i=0; i < areaData.areas.length; i +=1) {%>
+      <option value="<% areaData.areas[i] %>">
+        <%= areaData.areas[i] %>
       </option>
       <% } %>
   </select>
@@ -23,7 +23,7 @@
       <tr class="thead">
         <th scope="col">Index</th>
         <th scope="col">Name</th>
-        <th scope="col">Zone</th>
+        <th scope="col">Area</th>
         <th scope="col">Actions</th>
 
       </tr>
@@ -41,7 +41,7 @@
             </a>
           </td>
           <td class="tdata">
-            <%= dataObj.data[i].zone %>
+            <%= dataObj.data[i].area %>
           </td>
           <td class="tdata">
             <%= dataObj.data[i].ratings %>

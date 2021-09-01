@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
-const zones = [('Raffles Place, Cecil, Marina'),
+const areas = [('Raffles Place, Cecil, Marina'),
   ('Anson, Tanjong Pagar'),
   ('Queenstown, Tiong Bahru, Telok Blangah, Harbourfront'),
   ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
@@ -53,14 +53,14 @@ if (process.env.ENV === 'PRODUCTION') {
     // set DB_PASSWORD as an environment variable for security.
     password: process.env.DB_PASSWORD,
     host: 'localhost',
-    database: 'makanwhere',
+    database: 'makan',
     port: 5432,
   };
 } else {
   pgConnectionConfigs = {
     user: 'midzham',
     host: 'localhost',
-    database: 'makanwhere',
+    database: 'makan',
     port: 5432,
   };
 }
@@ -138,12 +138,12 @@ const renderEstIndex = (request, response) => {
     const data = result.rows;
     const dataObj = { data };
     console.log(data[0]);
-    const zoneData = { zones };
-    console.log(zoneData.zones.length);
+    const areaData = { areas };
+    console.log(areaData.areas.length);
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
       const cuisineData = { cuisines: cuisineResult.rows };
       console.log(cuisineData);
-      response.render('index', { dataObj, zoneData, cuisineData });
+      response.render('index', { dataObj, areaData, cuisineData });
     });
   });
 };
@@ -310,10 +310,10 @@ const renderAddEst = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
     const dataObj = { data };
-    const zoneData = { zones };
+    const areaData = { areas };
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
       const cuisineData = { cuisines: cuisineResult.rows };
-      response.render('addEsta', { dataObj, zoneData, cuisineData });
+      response.render('addEsta', { dataObj, areaData, cuisineData });
     });
   });
 };
@@ -322,12 +322,12 @@ const addEst = (request, response) => {
   const { userId } = request.cookies;
   console.log(`userId:${userId}`);
   const {
-    name, address, zone, contact, email,
+    name, address, area, contact, email,
   } = request.body;
 
   let { cuisines } = request.body;
   console.log(request.body);
-  const addQuery = `INSERT INTO establishments (name, address, zone, cuisine, contact, email, user_id) VALUES ('${name}','${address}','${zone}', '${cuisines}', '${contact}','${email}','${userId}') returning id`;
+  const addQuery = `INSERT INTO establishments (name, address, area, cuisine, contact, email, user_id) VALUES ('${name}','${address}','${area}', '${cuisines}', '${contact}','${email}','${userId}') returning id`;
   console.log(addQuery);
 
   pool.query(addQuery, (addError, addResult) => {
@@ -371,16 +371,16 @@ const renderEditPage = (request, response) => {
   const { id } = request.params;
   pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, (error, result) => {
     console.log(id);
-    const zoneData = { zones };
+    const areaData = { areas };
     const data = result.rows;
     console.log(data);
     const dataObj = { data };
     // console.log(data[0]);
-    console.log(zoneData.zones.length);
+    console.log(areaData.areas.length);
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
       const cuisineData = { cuisines: cuisineResult.rows };
       console.log(cuisineData);
-      response.render('editEst', { dataObj, zoneData, cuisineData });
+      response.render('editEst', { dataObj, areaData, cuisineData });
     });
   });
 };
@@ -390,7 +390,7 @@ const editPage = (request, response) => {
   console.log(id);
   const data = request.body;
   console.log(data);
-  const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', zone = '${data.zone}', contact = '${data.contact}', cuisine = '${data.cuisines}' WHERE id = ${id} RETURNING *`;
+  const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', area = '${data.area}', contact = '${data.contact}', cuisine = '${data.cuisines}' WHERE id = ${id} RETURNING *`;
 
   pool.query(editQuery, (editQueryError, editQueryResult) => {
     if (editQueryError) {

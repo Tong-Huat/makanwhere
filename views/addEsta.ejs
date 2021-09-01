@@ -12,12 +12,12 @@
         <input type="text" class="form-control" name="address" rows="3">
       </div>
       <div class="col-md-12 mb-3 submit-label">
-        <label for="zones" class="form-label">Zones</label>
+        <label for="areas" class="form-label">Areas</label>
         <br>
-        <select name="zone" required>
-          <% zoneData.zones.forEach((zone)=> { %>
-            <option value="<%= zone %>">
-              <%= zone %>
+        <select name="area" required>
+          <% areaData.areas.forEach((area)=> { %>
+            <option value="<%= area %>">
+              <%= area %>
             </option>
             <% }); %>
         </select>
