@@ -403,7 +403,31 @@ const editPage = (request, response) => {
 };
 
 const renderSurprise = (request, response) => {
-  response.render('surprise');
+  const areaData = { areas };
+  response.render('surprise', areaData);
+};
+
+const getSurprise = (request, response) => {
+  const { area } = request.body;
+  console.log('area:', area);
+
+  const surpriseQuery = `SELECT * FROM establishments WHERE area = '${area}'`;
+  pool.query(surpriseQuery, (surpriseQueryErr, surpriseQueryResult) => {
+    if (surpriseQueryErr) {
+      console.log('error', surpriseQueryErr);
+    } else {
+      // const dataObj = data;
+      // console.log('surprise:', data);
+      const max = surpriseQueryResult.rows.length - 1;
+      const min = 0;
+      const index = Math.ceil(Math.random() * (max - min) + min);
+      console.log(index);
+      const data = [surpriseQueryResult.rows[0]];
+      console.log(data);
+      const dataObj = { data };
+      response.render('establishment', dataObj);
+    }
+  });
 };
 
 const renderReservationForm = (request, response) => {
@@ -428,6 +452,7 @@ app.post('/add', addEst);
 app.get('/listing/:id/edit', renderEditPage);
 app.put('/listing/:id/edit', editPage);
 app.get('/surprise', renderSurprise);
+app.post('/surprise', getSurprise);
 // app.post surprise to be completed
 app.get('/listing/:id/reservation', renderReservationForm);
 // app.post reservation to be completed

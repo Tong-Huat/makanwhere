@@ -11,3 +11,4 @@ INSERT INTO establishments (name, address, area, cuisine, contact, email, user_i
 ('Makan Fix','Gallop Kranji Farm Resort Kranji','Woodgrove','Western','87296064','https://www.facebook.com/MakanFix/','3'),
 ('Penang Culture','50 Jurong Gateway Road #04-27 Singapore 608549','Jurong','Chinese','65467793','https://halalfoodhunt.com/listing/places/www.penangculture.com.sg','2');
 
+INSERT INTO establishments_cuisines (establishment_id, cuisine_id) VALUES (1,1),(2,2),(3,1);

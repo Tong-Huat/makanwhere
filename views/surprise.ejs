@@ -6,19 +6,21 @@
   <label for="selection">I want to select by:</label>
   <form action="/surprise" method="POST">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-6 col-m-2 col-lg-1">
-          <select class="form-select form-select-s mb-3" aria-label=".form-select-lg example">
-
-            <option selected>Select by</option>
-            <option value="1">Area</option>
-            <option value="2">Cuisine</option>
-            <option value="3">Ratings</option>
-          </select>
-        </div>
+      <div class="col-md-12 mb-3 submit-label">
+        <label for="areas" class="form-label">Area</label>
+        <br>
+        <select name="area" required>
+          <% areas.forEach((area)=> { %>
+            <option value="<%= area %>">
+              <%= area %>
+            </option>
+            <% }); %>
+        </select>
       </div>
-    </div>
 
+      <div class="col-md-12">
+        <input type="submit" value="Submit">
+      </div>
   </form>
   <br>
   <br>
