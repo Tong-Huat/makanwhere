@@ -8,7 +8,7 @@ import pg from 'pg';
 import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
 
-// const PORT = process.argv[2];
+const PORT = process.argv[2];
 
 const app = express();
 const SALT = 'i like cocomelon';
@@ -53,14 +53,14 @@ if (process.env.ENV === 'PRODUCTION') {
     // set DB_PASSWORD as an environment variable for security.
     password: process.env.DB_PASSWORD,
     host: 'localhost',
-    database: 'birding',
+    database: 'makan',
     port: 5432,
   };
 } else {
   pgConnectionConfigs = {
     user: 'midzham',
     host: 'localhost',
-    database: 'makanwhere',
+    database: 'makan',
     port: 5432,
   };
 }
@@ -433,4 +433,4 @@ app.get('/surprise', renderSurprise);
 // app.post surprise to be completed
 app.get('/listing/:id/reservation', renderReservationForm);
 // app.post reservation to be completed
-app.listen(3004);
+app.listen(PORT);
