@@ -25,11 +25,11 @@
       <div class="col-md-12 mb-3 submit-label">
         <label for="cuisine" class="form-label">Cuisine</label>
         <br>
-        <% cuisineData.cuisines.forEach((cuisine)=> { %>
+        <% cuisineData.cuisines.forEach((cuisinetype)=> { %>
           <label>
-            <%= cuisine.cuisine %>
+            <%= cuisinetype.cuisine %>
           </label>
-          <input type="checkbox" name="cuisines" value="<%=  cuisine.cuisine %>" />
+          <input type="checkbox" name="cuisines" value="<%=  cuisinetype.cuisine %>" />
           <% }); %>
       </div>
       <div class="col-md-3 mb-3 submit-label">
