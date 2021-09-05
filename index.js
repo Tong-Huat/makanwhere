@@ -35,10 +35,8 @@ const areas = [('Raffles Place, Cecil, Marina'),
   ('Loyang, Changi, Tampines, Pasir Ris'),
   ('Serangoon Garden, Hougang, Punggol'),
   ('Bishan, Ang Mo Kio'),
-  ('Upper Bukit Timah, Clementi Park, Ulu Pandan'),
   ('Jurong'),
   ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
-  ('Lim Chu Kang, Tengah'),
   ('Kranji, Woodgrove'),
   ('Upper Thomson, Springleaf, Yishun, Sembawang'),
   ('Seletar')];
@@ -125,6 +123,38 @@ const restrictToLoggedIn = (request, response, next) => {
   }
 };
 
+// const restrictToMembers = () => {
+//   let userState = '';
+
+//   // render different contents on this page depending
+//   // on if the user is logged in or not
+//   if (request.isUserLoggedIn === true) {
+//     userState = `
+//       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+//           <li class="nav-item">
+//             <a class="nav-link active" aria-current="page" href="/listing">Listing</a>
+//           </li>
+//           <li class="nav-item">
+//             <a class="nav-link" href="/surprise">Surprise Me!</a>
+//           </li>
+//           <li class="nav-item">
+//             <a class="nav-link" href="/add">Add Establishments</a>
+//           </li>
+//           <li class="nav-item">
+//             <a class="nav-link" href="/logout">Logout</a>
+//           </li>
+//         </ul>
+//     `;
+//   } else {
+//     userState = `
+//       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+//           <li class="nav-item">
+//             <a class="nav-link active" aria-current="page" href="/listing">Listing</a>
+//           </li>
+//            </ul>
+//     `;
+//   }
+// };
 // CB for routes
 // CB to render welcome page
 const renderWelcomePage = (request, response) => {

@@ -12,11 +12,11 @@
   <div class="row align-items-md-stretch">
     <div class="col-md-6 ">
       <div class="h-100 p-5 text-white bg-dark rounded-3">
-        <div class="col-md-6 mb-3 submit-label">
+        <div class="col-md-10 mb-3 submit-label">
           <label for="Address" class="form-label">Address</label>
           <textarea disabled class="form-control" name="Address" rows="3"><%= data[0].address %></textarea>
         </div>
-        <div class="col-md-8 mb-3 submit-label">
+        <div class="col-md-10 mb-3 submit-label">
           <label for="area" class="form-label">Area</label>
           <textarea disabled class="form-control" name="area" rows="1"><%= data[0].area %></textarea>
         </div>
@@ -33,20 +33,18 @@
           <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
           <textarea disabled class="form-control" name="cuisine" rows="2"> <%= data[0].cuisine %></textarea>
         </div>
+
         <div class="col-md-5 mb-3 submit-label">
-          <label for="ratings" class="form-label" style="color:black">Ratings</label>
-          <textarea disabled class="form-control" name="ratings" rows="1"> To be advised</textarea>
-        </div>
-        <div class="col-md-5 mb-3 submit-label">
-          <label for="comments" class="form-label" style="color:black">comments</label>
+          <label for="comments" class="form-label" style="color:black">Comments</label>
           <textarea disabled class="form-control" name="comments" rows="1"> comments </textarea>
         </div>
         <div class="editbtn">
           <button> <a href='/listing/<%= data[0].id %>/edit'>Edit</a> </button>
         </div>
-        <div class="reservebtn">
-          <button> <a href='/listing/<%= data[0].id %>/reservation'>Reserve</a> </button>
-        </div>
+        <!-- pending -->
+        <!-- <div class="reservebtn">
+          <button> <a href='/listing/<% data[0].id %>/reservation'>Reserve</a> </button>
+        </div> -->
       </div>
     </div>
   </div>
