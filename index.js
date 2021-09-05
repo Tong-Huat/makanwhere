@@ -418,11 +418,13 @@ const getSurprise = (request, response) => {
     } else {
       // const dataObj = data;
       // console.log('surprise:', data);
-      const max = surpriseQueryResult.rows.length - 1;
+      const max = surpriseQueryResult.rows.length;
+      console.log(surpriseQueryResult.rows);
       const min = 0;
-      const index = Math.ceil(Math.random() * (max - min) + min);
+      // eslint-disable-next-line prefer-const
+      let index = Math.floor(Math.random() * max);
       console.log(index);
-      const data = [surpriseQueryResult.rows[0]];
+      const data = [surpriseQueryResult.rows[index]];
       console.log(data);
       const dataObj = { data };
       response.render('establishment', dataObj);
@@ -438,22 +440,20 @@ const renderReservationForm = (request, response) => {
 };
 
 app.get('/', renderWelcomePage);
-app.get('/listing', restrictToLoggedIn, renderEstIndex);
+app.get('/listing', renderEstIndex);
 app.get('/register', renderRegistration);
 app.post('/register', registerUser);
 app.get('/login', renderLogin);
 app.post('/login', loginAccount);
 app.get('/logout', logout);
 app.get('/listing/:id', renderEstablishment);
-app.delete('/listing/:id', deleteEst);
-app.get('/add', renderAddEst);
-// addEst got bug, cannot add 1 cuisine only
+app.delete('/listing/:id', restrictToLoggedIn, deleteEst);
+app.get('/add', restrictToLoggedIn, renderAddEst);
 app.post('/add', addEst);
-app.get('/listing/:id/edit', renderEditPage);
+app.get('/listing/:id/edit', restrictToLoggedIn, renderEditPage);
 app.put('/listing/:id/edit', editPage);
-app.get('/surprise', renderSurprise);
+app.get('/surprise', restrictToLoggedIn, renderSurprise);
 app.post('/surprise', getSurprise);
-// app.post surprise to be completed
-app.get('/listing/:id/reservation', renderReservationForm);
+app.get('/listing/:id/reservation', restrictToLoggedIn, renderReservationForm);
 // app.post reservation to be completed
 app.listen(PORT);
