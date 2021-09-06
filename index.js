@@ -123,38 +123,6 @@ const restrictToLoggedIn = (request, response, next) => {
   }
 };
 
-// const restrictToMembers = () => {
-//   let userState = '';
-
-//   // render different contents on this page depending
-//   // on if the user is logged in or not
-//   if (request.isUserLoggedIn === true) {
-//     userState = `
-//       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-//           <li class="nav-item">
-//             <a class="nav-link active" aria-current="page" href="/listing">Listing</a>
-//           </li>
-//           <li class="nav-item">
-//             <a class="nav-link" href="/surprise">Surprise Me!</a>
-//           </li>
-//           <li class="nav-item">
-//             <a class="nav-link" href="/add">Add Establishments</a>
-//           </li>
-//           <li class="nav-item">
-//             <a class="nav-link" href="/logout">Logout</a>
-//           </li>
-//         </ul>
-//     `;
-//   } else {
-//     userState = `
-//       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-//           <li class="nav-item">
-//             <a class="nav-link active" aria-current="page" href="/listing">Listing</a>
-//           </li>
-//            </ul>
-//     `;
-//   }
-// };
 // CB for routes
 // CB to render welcome page
 const renderWelcomePage = (request, response) => {
@@ -167,12 +135,12 @@ const renderEstIndex = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
     const dataObj = { data };
-    console.log(data[0]);
+    // console.log(data[0]);
     const areaData = { areas };
-    console.log(areaData.areas.length);
+    // console.log(areaData.areas.length);
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
       const cuisineData = { cuisines: cuisineResult.rows };
-      console.log(cuisineData);
+      // console.log(cuisineData);
       response.render('index', { dataObj, areaData, cuisineData });
     });
   });
@@ -292,22 +260,26 @@ const renderEstablishment = (request, response) => {
   const { id } = request.params;
 
   const listSpecificEst = (error, result) => {
-    console.log(id);
-    console.log(result);
     const data = result.rows;
     console.log(data);
+    console.log(data.comment);
 
     if (error) {
       console.log('Error executing query', error.stack);
       response.status(503).send(result.rows);
     }
+
+    if (data[0].comment === '') {
+      data[0].comment = 'No comments yet';
+    }
+
     const dataObj = { data };
-    // console.log(`result: ${dataObj}`);
+    console.log('comment:', data[0].comment);
 
     response.render('establishment', dataObj);
   };
   // Query using pg.Pool instead of pg.Client
-  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, listSpecificEst);
+  pool.query(`SELECT * FROM establishments INNER JOIN comments ON comments.establishment_id = establishments.id INNER JOIN users ON users.id = comments.user_id WHERE establishments.id = ${id}`, listSpecificEst);
 };
 
 // CB to del note
@@ -399,7 +371,7 @@ const addEst = (request, response) => {
 const renderEditPage = (request, response) => {
   console.log('edit request came in');
   const { id } = request.params;
-  pool.query(`SELECT * FROM establishments WHERE establishments.id = ${id}`, (error, result) => {
+  pool.query(`SELECT * FROM establishments INNER JOIN comments ON comments.establishment_id = establishments.id INNER JOIN users ON users.id = comments.user_id WHERE establishments.id = ${id}`, (error, result) => {
     console.log(id);
     const areaData = { areas };
     const data = result.rows;
@@ -469,6 +441,22 @@ const renderReservationForm = (request, response) => {
   response.render('reservation', dataId);
 };
 
+const addComment = (request, response) => {
+  const { userId } = request.cookies;
+  const estId = request.params.id;
+  const { comment } = request.body;
+  console.log('addcomment:', comment);
+  // write sql
+  const addCommentQuery = `INSERT INTO comments (comment, establishment_id, user_id) VALUES ('${comment}', '${estId}', '${userId}')`;
+  pool.query(addCommentQuery, (addCommentQueryError, addCommentQueryResult) => {
+    if (addCommentQueryError) {
+      console.log('add comment error', addCommentQueryError);
+    } else {
+      response.redirect(`/listing/${estId}`);
+    }
+  });
+};
+
 app.get('/', renderWelcomePage);
 app.get('/listing', renderEstIndex);
 app.get('/register', renderRegistration);
@@ -484,6 +472,7 @@ app.get('/listing/:id/edit', restrictToLoggedIn, renderEditPage);
 app.put('/listing/:id/edit', editPage);
 app.get('/surprise', restrictToLoggedIn, renderSurprise);
 app.post('/surprise', getSurprise);
-app.get('/listing/:id/reservation', restrictToLoggedIn, renderReservationForm);
+app.post('/listing/:id', addComment);
+// app.get('/listing/:id/reservation', restrictToLoggedIn, renderReservationForm);
 // app.post reservation to be completed
 app.listen(PORT);

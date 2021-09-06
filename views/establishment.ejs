@@ -33,19 +33,29 @@
           <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
           <textarea disabled class="form-control" name="cuisine" rows="2"> <%= data[0].cuisine %></textarea>
         </div>
-
-        <div class="col-md-5 mb-3 submit-label">
+        <div class="col-md-10 mb-3 submit-label">
           <label for="comments" class="form-label" style="color:black">Comments</label>
-          <textarea disabled class="form-control" name="comments" rows="1"> comments </textarea>
+          <% for (let i=0; i < data.length; i +=1 ) {%>
+            <textarea disabled class="form-control" name="comments"
+              rows="1"> <%= data[i].username %>: <%= data[i].comment %> </textarea>
+            <% } %>
         </div>
-        <div class="editbtn">
-          <button> <a href='/listing/<%= data[0].id %>/edit'>Edit</a> </button>
-        </div>
-        <!-- pending -->
-        <!-- <div class="reservebtn">
+        <form action="/listing/<%= data[0].id %>" method="POST">
+          <div class="col-md-10 mb-3 submit-label">
+            <!-- <label for="comments" class="form-label" style="color:black">Add Comments</label> -->
+            <textarea class="form-control" name="comment" rows="1"> Input comments here </textarea>
+            <br>
+            <input type="submit" value="Add Comments" />
+        </form>
+      </div>
+      <div class="editbtn">
+        <button> <a href='/listing/<%= data[0].id %>/edit'>Edit Page</a> </button>
+      </div>
+      <!-- pending -->
+      <!-- <div class="reservebtn">
           <button> <a href='/listing/<% data[0].id %>/reservation'>Reserve</a> </button>
         </div> -->
-      </div>
     </div>
+  </div>
   </div>
   <%- include('footer'); -%>

@@ -14,9 +14,16 @@
             <label for="Address" class="form-label" required>Address</label>
             <textarea class="form-control" name="address" rows="3"><%= dataObj.data[0].address %></textarea>
           </div>
-          <div class="col-md-8 mb-3 submit-label">
-            <label for="area" class="form-label">Area</label>
-            <textarea class="form-control" name="area" rows="1"><%= dataObj.data[0].area %></textarea>
+          <div class="col-md-12 mb-3 submit-label">
+            <label for="areas" class="form-label">Areas</label>
+            <br>
+            <select name="area" required>
+              <% areaData.areas.forEach((area)=> { %>
+                <option value="<%= area %>">
+                  <%= area %>
+                </option>
+                <% }); %>
+            </select>
           </div>
           <div class="col-md-5 mb-3 submit-label">
             <label for="contact" class="form-label">Contact Number</label>
@@ -26,14 +33,22 @@
       </div>
       <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">
-
-          <div class="col-md-7 mb-3 submit-label">
-            <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
-            <textarea class="form-control" name="cuisine" rows="2"> <%= dataObj.data[0].cuisine %></textarea>
+          <div class="col-md-12 mb-3 submit-label" style="color:black">
+            <label for="cuisine" class="form-label">Cuisine</label>
+            <br>
+            <% cuisineData.cuisines.forEach((cuisinetype)=> { %>
+              <label>
+                <%= cuisinetype.cuisine %>
+              </label>
+              <input type="checkbox" name="cuisines" value="<%=  cuisinetype.cuisine %>" />
+              <% }); %>
           </div>
-          <div class="col-md-5 mb-3 submit-label">
+          <div class="col-md-10 mb-3 submit-label">
             <label for="comments" class="form-label" style="color:black">Comments</label>
-            <textarea disabled class="form-control" name="comments" rows="1"> Comments </textarea>
+            <% for (let i=0; i < dataObj.data.length; i +=1 ) {%>
+              <textarea disabled class="form-control" name="comments"
+                rows="1"> <%= dataObj.data[i].username %>: <%= dataObj.data[i].comment %> </textarea>
+              <% } %>
           </div>
 
         </div>
