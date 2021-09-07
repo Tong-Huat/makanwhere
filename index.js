@@ -258,28 +258,21 @@ const logout = (request, response) => {
 const renderEstablishment = (request, response) => {
   console.log('est request came in');
   const { id } = request.params;
+  // get est data
+  pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
+    const estb = estbResult.rows[0];
+    // get all comments
+    pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
+      // const comments = commentResult.rows.map((commentsObj) => commentsObj.comment);
 
-  const listSpecificEst = (error, result) => {
-    const data = result.rows;
-    console.log(data);
-    console.log(data.comment);
-
-    if (error) {
-      console.log('Error executing query', error.stack);
-      response.status(503).send(result.rows);
-    }
-
-    if (data[0].comment === '') {
-      data[0].comment = 'No comments yet';
-    }
-
-    const dataObj = { data };
-    console.log('comment:', data[0].comment);
-
-    response.render('establishment', dataObj);
-  };
-  // Query using pg.Pool instead of pg.Client
-  pool.query(`SELECT * FROM establishments INNER JOIN comments ON comments.establishment_id = establishments.id INNER JOIN users ON users.id = comments.user_id WHERE establishments.id = ${id}`, listSpecificEst);
+      const resultObj = commentResult.rows;
+      const content = {
+        estb, resultObj, rows: commentResult.rows,
+      };
+      console.log('result:', commentResult.rows);
+      response.render('establishment', content);
+    });
+  });
 };
 
 // CB to del note
@@ -371,18 +364,19 @@ const addEst = (request, response) => {
 const renderEditPage = (request, response) => {
   console.log('edit request came in');
   const { id } = request.params;
-  pool.query(`SELECT * FROM establishments INNER JOIN comments ON comments.establishment_id = establishments.id INNER JOIN users ON users.id = comments.user_id WHERE establishments.id = ${id}`, (error, result) => {
-    console.log(id);
-    const areaData = { areas };
-    const data = result.rows;
-    console.log(data);
-    const dataObj = { data };
-    // console.log(data[0]);
-    console.log(areaData.areas.length);
-    pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
-      const cuisineData = { cuisines: cuisineResult.rows };
-      console.log(cuisineData);
-      response.render('editEst', { dataObj, areaData, cuisineData });
+  pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
+    const estb = estbResult.rows[0];
+    // get all comments
+    pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
+      const resultObj = commentResult.rows;
+      pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
+        const cuisineData = { cuisines: cuisineResult.rows };
+        const areaData = { areas };
+        const content = {
+          estb, resultObj, cuisineData, areaData, rows: commentResult.rows,
+        };
+        response.render('editEst', content);
+      });
     });
   });
 };
@@ -418,18 +412,23 @@ const getSurprise = (request, response) => {
     if (surpriseQueryErr) {
       console.log('error', surpriseQueryErr);
     } else {
-      // const dataObj = data;
-      // console.log('surprise:', data);
       const max = surpriseQueryResult.rows.length;
       console.log(surpriseQueryResult.rows);
-      const min = 0;
       // eslint-disable-next-line prefer-const
       let index = Math.floor(Math.random() * max);
       console.log(index);
-      const data = [surpriseQueryResult.rows[index]];
-      console.log(data);
-      const dataObj = { data };
-      response.render('establishment', dataObj);
+      const surprise = [surpriseQueryResult.rows[index]];
+      console.log('surprise:', surprise);
+      const estb = surprise[0];
+      console.log('estb:', estb);
+      pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${estb.id}`, (error, commentResult) => {
+        const resultObj = commentResult.rows;
+        console.log('resultObj:', resultObj);
+        const content = {
+          estb, resultObj, rows: commentResult.rows,
+        };
+        response.render('establishment', content);
+      });
     }
   });
 };

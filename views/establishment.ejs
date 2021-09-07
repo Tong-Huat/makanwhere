@@ -1,61 +1,60 @@
 <%- include('header', {title: `Est Info`}); -%>
 
-  <div class="p-5 mb-4 bg-light rounded-3">
+  <div class="p-5 mb-4 bg-light rounded-3 bgimg">
     <div class="container-fluid py-5">
-      <h1 class="display-5 fw-bold">
-        <%= data[0].name %>
+      <h1 class="display-5 fw-bold" style="color: white">
+        <%= estb.name %>
       </h1>
 
     </div>
   </div>
 
-  <div class="row align-items-md-stretch">
+  <div class="row align-items-md-stretch ">
     <div class="col-md-6 ">
-      <div class="h-100 p-5 text-white bg-dark rounded-3">
+      <div class="h-100 p-5 text-white bg-dark rounded-3 displayL">
         <div class="col-md-10 mb-3 submit-label">
           <label for="Address" class="form-label">Address</label>
-          <textarea disabled class="form-control" name="Address" rows="3"><%= data[0].address %></textarea>
+          <textarea disabled class="form-control" name="Address" rows="3"><%= estb.address %></textarea>
         </div>
         <div class="col-md-10 mb-3 submit-label">
           <label for="area" class="form-label">Area</label>
-          <textarea disabled class="form-control" name="area" rows="1"><%= data[0].area %></textarea>
+          <textarea disabled class="form-control" name="area" rows="1"><%= estb.area %></textarea>
         </div>
         <div class="col-md-5 mb-3 submit-label">
           <label for="contact" class="form-label">Contact Number</label>
-          <textarea disabled class="form-control" name="contact" rows="1"> <%= data[0].contact %></textarea>
+          <textarea disabled class="form-control" name="contact" rows="1"> <%= estb.contact %></textarea>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="h-100 p-5 bg-light border rounded-3">
+    <div class="col-md-6 ">
+      <div class="h-100 p-5 bg-light border rounded-3 displayR">
 
         <div class="col-md-7 mb-3 submit-label">
           <label for="cuisine" class="form-label" style="color:black">Cuisine</label>
-          <textarea disabled class="form-control" name="cuisine" rows="2"> <%= data[0].cuisine %></textarea>
+          <textarea disabled class="form-control" name="cuisine" rows="2"> <%= estb.cuisine %></textarea>
         </div>
         <div class="col-md-10 mb-3 submit-label">
           <label for="comments" class="form-label" style="color:black">Comments</label>
-          <% for (let i=0; i < data.length; i +=1 ) {%>
+          <% for (let i=0; i < resultObj.length; i +=1 ) {%>
             <textarea disabled class="form-control" name="comments"
-              rows="1"> <%= data[i].username %>: <%= data[i].comment %> </textarea>
+              rows="1"> <%= resultObj[i].username %>: <%= resultObj[i].comment %> </textarea>
             <% } %>
+
+
         </div>
-        <form action="/listing/<%= data[0].id %>" method="POST">
+        <form action="/listing/<%= estb.id %>" method="POST">
           <div class="col-md-10 mb-3 submit-label">
             <!-- <label for="comments" class="form-label" style="color:black">Add Comments</label> -->
-            <textarea class="form-control" name="comment" rows="1"> Input comments here </textarea>
-            <br>
+            <input type="text" class="form-control" name="comment" placeholder="Input comments here ">
+
             <input type="submit" value="Add Comments" />
         </form>
       </div>
       <div class="editbtn">
-        <button> <a href='/listing/<%= data[0].id %>/edit'>Edit Page</a> </button>
+        <button> <a href='/listing/<%= estb.id %>/edit'>Edit Page</a> </button>
       </div>
-      <!-- pending -->
-      <!-- <div class="reservebtn">
-          <button> <a href='/listing/<% data[0].id %>/reservation'>Reserve</a> </button>
-        </div> -->
+
+
     </div>
-  </div>
   </div>
   <%- include('footer'); -%>

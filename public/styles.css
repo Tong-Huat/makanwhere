@@ -14,7 +14,37 @@ body {
   background-color: rgb(240, 153, 13);
   margin: 0 auto;
   text-align: center;
+  background-image: url("../img/food.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  /* opacity: 0.7; */
 }
+
+.nav-item {
+  padding-left: 20px;
+  padding-top: 5px;
+}
+
+.bgimg {
+  background-image: url("../img/bgtop.jpeg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  /* opacity: 0.5; */
+}
+
+/* .displayL {
+  background-image: url("../img/food.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+
+.displayR {
+  background-image: url("../img/display.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+} */
 
 .bd-placeholder-img {
   font-size: 1.125rem;
@@ -29,15 +59,15 @@ body {
 }
 
 .theader {
-  color: aliceblue;
+  color: rgb(15, 9, 1);
 }
 .thead,
 .tdata {
-  color: aliceblue;
+  color: rgb(15, 9, 1);
 }
 .tdata > a,
 .shape-report {
-  color: antiquewhite;
+  color: rgb(15, 9, 1);
 }
 
 .bd-placeholder-img {
@@ -57,7 +87,19 @@ body {
 
 h1 {
   padding-top: 80px;
-  color: rgb(24, 46, 46);
+  color: rgb(247, 241, 239);
+}
+
+h3 {
+  padding-top: 40px;
+  color: rgb(15, 9, 1);
+}
+h2 {
+  padding-top: 40px;
+  color: rgb(15, 9, 1);
+}
+label {
+  color: white;
 }
 
 .shape-text {
