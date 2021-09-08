@@ -1,56 +1,60 @@
 <%- include('header', {title: `Add Establishment`}); -%>
+  <div class="card text-dark bg-light mb-3 est-card">
+    <div class="card-header">
+      <h1 style="text-align: center">Add New Establishment</h1>
+    </div>
+    <div class="card-body">
 
-  <h1 style="text-align: center">Add New Establishment</h1>
-  <div class="container">
-    <form action="/add" method="POST">
-      <div class="col-md-4 mb-3 submit-label">
-        <label for="name" class="form-label">Name of Establishment</label>
-        <input type="text" class="form-control" name="name" rows="3" required>
+      <div class="container">
+        <form action="/add" method="POST">
+          <div class="col-md-6 mb-3 submit-label">
+            <label for="name" class="form-label">Name of Establishment</label>
+            <input type="text" class="form-control" name="name" rows="3" required>
+          </div>
+          <div class="col-md-6 mb-3 submit-label">
+            <label for="address" class="form-label" required>Address</label>
+            <input type="text" class="form-control" name="address" rows="4">
+          </div>
+          <div class="col-md-12 mb-3 submit-label">
+            <label for="areas" class="form-label">Area</label>
+            <br>
+            <select name="area" required>
+              <% areaData.areas.forEach((area)=> { %>
+                <option value="<%= area %>">
+                  <%= area %>
+                </option>
+                <% }); %>
+            </select>
+          </div>
+          <div class="col-md-12 mb-3 submit-label">
+            <label for="cuisine" class="form-label">Cuisine</label>
+            <br>
+            <% cuisineData.cuisines.forEach((cuisinetype)=> { %>
+              <label>
+                <%= cuisinetype.cuisine %>
+              </label>
+              <input type="checkbox" name="cuisines" value="<%=  cuisinetype.cuisine %>" />
+              <% }); %>
+          </div>
+          <div class="col-md-3 mb-3 submit-label">
+            <label for="contact" class="form-label">Contact</label>
+            <input type="tel" pattern="[0-9]{8}" required placeholder="12345678" class="form-control" name="contact"
+              rows="1">
+          </div>
+          <div class="col-md-3 mb-3 submit-label">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required rows="1">
+          </div>
+          <div class="col-md-12">
+            <input type="submit" value="Submit">
+          </div>
+          <br>
+          <div class="col-md-12">
+            <input type="reset">
+          </div>
+        </form>
       </div>
-      <div class="col-md-4 mb-3 submit-label">
-        <label for="address" class="form-label" required>Address</label>
-        <input type="text" class="form-control" name="address" rows="4">
-      </div>
-      <div class="col-md-12 mb-3 submit-label">
-        <label for="areas" class="form-label">Area</label>
-        <br>
-        <select name="area" required>
-          <% areaData.areas.forEach((area)=> { %>
-            <option value="<%= area %>">
-              <%= area %>
-            </option>
-            <% }); %>
-        </select>
-      </div>
-      <div class="col-md-12 mb-3 submit-label">
-        <label for="cuisine" class="form-label">Cuisine</label>
-        <br>
-        <% cuisineData.cuisines.forEach((cuisinetype)=> { %>
-          <label>
-            <%= cuisinetype.cuisine %>
-          </label>
-          <input type="checkbox" name="cuisines" value="<%=  cuisinetype.cuisine %>" />
-          <% }); %>
-      </div>
-      <div class="col-md-3 mb-3 submit-label">
-        <label for="contact" class="form-label">Contact</label>
-        <input type="tel" pattern="[0-9]{8}" required placeholder="12345678" class="form-control" name="contact"
-          rows="1">
-      </div>
-      <div class="col-md-3 mb-3 submit-label">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" name="email" required rows="1">
-      </div>
-      <div class="col-md-12">
-        <input type="submit" value="Submit">
-      </div>
-      <br>
-      <div class="col-md-12">
-        <input type="reset">
-      </div>
-    </form>
-    <br>
-    <br>
-    <br>
+    </div>
+
 
     <%- include('footer'); -%>
