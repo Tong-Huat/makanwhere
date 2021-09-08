@@ -12,34 +12,33 @@ import multerS3 from 'multer-s3';
 
 const PORT = process.env.PORT || 3004;
 
-const app = express();
-const SALT = 'i like cocomelon';
-
-app.set('view engine', 'ejs');
-// Override POST requests with query param ?_method=PUT to be PUT requests
-app.use(methodOverride('_method'));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static('public'));
-app.use(cookieParser());
-
 const s3 = new aws.S3({
   accessKeyId: process.env.ACCESSKEYID,
   secretAccessKey: process.env.SECRETACCESSKEY,
 });
 
-const multerUpload = multer({
-  storage: multerS3({
-    s3,
-    bucket: '<MY_BUCKET_NAME>',
-    acl: 'public-read',
-    metadata: (request, file, callback) => {
-      callback(null, { fieldName: file.fieldname });
-    },
-    key: (request, file, callback) => {
-      callback(null, Date.now().toString());
-    },
-  }),
-});
+const app = express();
+const SALT = 'i like cocomelon';
+
+app.set('view engine', 'ejs');
+app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static('public'));
+app.use(cookieParser());
+
+// const multerUpload = multer({
+//   storage: multerS3({
+//     s3,
+//     bucket: 'makanwhere',
+//     acl: 'public-read',
+//     metadata: (request, file, callback) => {
+//       callback(null, { fieldName: file.fieldname });
+//     },
+//     key: (request, file, callback) => {
+//       callback(null, Date.now().toString());
+//     },
+//   }),
+// });
 
 const areas = [('Raffles Place, Cecil, Marina'),
   ('Anson, Tanjong Pagar'),
