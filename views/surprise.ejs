@@ -1,30 +1,34 @@
 <%- include('header', {title: `Surprise Me!`}); -%>
-
-  <h1>Surprise Me!</h1>
-  <h2>Dunno eat what? </h2>
-  <h3>Choose an area and we decide for you!</h3>
-  <br>
-  <label style="font-size: large;" for="selection">I want to select by:</label>
-  <form action="/surprise" method="POST">
-    <div class="container">
-      <div class="row 
-      justify-content-sm-center justify-content-md-center justify-content-lg-center">
-        <div class=" col-4 mb-3 submit-label">
-          <label style="font-size: large;" for="areas" class="form-label">Area</label>
-          <br>
-          <select name="area" required>
-            <% areas.forEach((area)=> { %>
-              <option value="<%= area %>">
-                <%= area %>
-              </option>
-              <% }); %>
-          </select>
+  <div class="card text-dark bg-light mb-3 surprise-card">
+    <div class="card-header">Surprise Me!</div>
+    <div class="card-body">
+      <h5 class="card-title">Dunno eat what?</h5>
+      <p class="card-text">Choose an area and we decide for you!
+      </p>
+      <p>I want to select by:</p>
+      <form action="/surprise" method="POST">
+        <div class="container">
+          <div class="row">
+            <div class=" col-4 mb-3 submit-label">
+              <label style="font-size: large;" for="areas" class="form-label">Area</label>
+              <select name="area" required>
+                <% areas.forEach((area)=> { %>
+                  <option value="<%= area %>">
+                    <%= area %>
+                  </option>
+                  <% }); %>
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="col-md-12">
-        <input type="submit" value="Submit">
-      </div>
-  </form>
+        <div class="col-md-12">
+          <input type="submit" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+
+
   <br>
   <br>
   <br>

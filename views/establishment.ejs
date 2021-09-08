@@ -35,9 +35,9 @@
         </div>
         <div class="col-md-10 mb-3 submit-label">
           <label for="comments" class="form-label" style="color:black">Comments</label>
-          <% for (let i=0; i < resultObj.length; i +=1 ) {%>
+          <% for (let i=0; i < comments.length; i +=1 ) {%>
             <textarea disabled class="form-control" name="comments"
-              rows="1"> <%= resultObj[i].username %>: <%= resultObj[i].comment %> </textarea>
+              rows="1"> <%= comments[i].username %>: <%= comments[i].comment %> </textarea>
             <% } %>
 
 

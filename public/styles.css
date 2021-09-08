@@ -15,7 +15,8 @@ body {
   margin: 0 auto;
   text-align: center;
   background-image: url("../img/food.jpg");
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   /* opacity: 0.7; */
 }
@@ -32,26 +33,13 @@ body {
   /* opacity: 0.5; */
 }
 
-/* .displayL {
-  background-image: url("../img/food.jpg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  opacity: 0.7;
-}
-
-.displayR {
-  background-image: url("../img/display.jpg");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  opacity: 0.7;
-} */
-
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  color: black;
 }
 
 .table {
@@ -99,7 +87,7 @@ h2 {
   color: rgb(15, 9, 1);
 }
 label {
-  color: white;
+  color: rgb(26, 2, 2);
 }
 
 .shape-text {
@@ -109,6 +97,11 @@ label {
 .table {
   width: 80%;
   margin: auto;
+}
+
+.surprise-card {
+  margin: 30vh auto;
+  width: 60%;
 }
 
 .copyright {

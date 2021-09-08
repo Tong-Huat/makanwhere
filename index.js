@@ -135,9 +135,9 @@ const renderEstIndex = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
     const dataObj = { data };
-    // console.log(data[0]);
+    console.log(data[0]);
     const areaData = { areas };
-    // console.log(areaData.areas.length);
+    console.log(areaData.areas[1]);
     pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
       const cuisineData = { cuisines: cuisineResult.rows };
       // console.log(cuisineData);
@@ -265,9 +265,9 @@ const renderEstablishment = (request, response) => {
     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
       // const comments = commentResult.rows.map((commentsObj) => commentsObj.comment);
 
-      const resultObj = commentResult.rows;
+      // const resultObj = commentResult.rows;
       const content = {
-        estb, resultObj, rows: commentResult.rows,
+        estb, comments: commentResult.rows,
       };
       console.log('result:', commentResult.rows);
       response.render('establishment', content);
@@ -368,12 +368,11 @@ const renderEditPage = (request, response) => {
     const estb = estbResult.rows[0];
     // get all comments
     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
-      const resultObj = commentResult.rows;
       pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
         const cuisineData = { cuisines: cuisineResult.rows };
         const areaData = { areas };
         const content = {
-          estb, resultObj, cuisineData, areaData, rows: commentResult.rows,
+          estb, cuisineData, areaData, comments: commentResult.rows,
         };
         response.render('editEst', content);
       });
@@ -422,22 +421,13 @@ const getSurprise = (request, response) => {
       const estb = surprise[0];
       console.log('estb:', estb);
       pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${estb.id}`, (error, commentResult) => {
-        const resultObj = commentResult.rows;
-        console.log('resultObj:', resultObj);
         const content = {
-          estb, resultObj, rows: commentResult.rows,
+          estb, comments: commentResult.rows,
         };
         response.render('establishment', content);
       });
     }
   });
-};
-
-const renderReservationForm = (request, response) => {
-  const { id } = request.params;
-  const dataId = { id };
-  console.log(id);
-  response.render('reservation', dataId);
 };
 
 const addComment = (request, response) => {
