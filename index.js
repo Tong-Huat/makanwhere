@@ -8,7 +8,7 @@ import pg from 'pg';
 import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
 
-const PORT = process.argv[2];
+const PORT = process.env.PORT || 3004;
 
 const app = express();
 const SALT = 'i like cocomelon';
