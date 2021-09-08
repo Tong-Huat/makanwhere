@@ -7,6 +7,8 @@ import methodOverride from 'method-override';
 import pg from 'pg';
 import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
+import aws from 'aws-sdk';
+import multerS3 from 'multer-s3';
 
 const PORT = process.env.PORT || 3004;
 
@@ -19,6 +21,25 @@ app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(cookieParser());
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.ACCESSKEYID,
+  secretAccessKey: process.env.SECRETACCESSKEY,
+});
+
+const multerUpload = multer({
+  storage: multerS3({
+    s3,
+    bucket: '<MY_BUCKET_NAME>',
+    acl: 'public-read',
+    metadata: (request, file, callback) => {
+      callback(null, { fieldName: file.fieldname });
+    },
+    key: (request, file, callback) => {
+      callback(null, Date.now().toString());
+    },
+  }),
+});
 
 const areas = [('Raffles Place, Cecil, Marina'),
   ('Anson, Tanjong Pagar'),
@@ -44,7 +65,17 @@ const areas = [('Raffles Place, Cecil, Marina'),
 // Initialise DB connection
 const { Pool } = pg;
 let pgConnectionConfigs;
-if (process.env.ENV === 'PRODUCTION') {
+
+// test to see if the env var is set. Then we know we are in Heroku
+if (process.env.DATABASE_URL) {
+  // pg will take in the entire value and use it to connect
+  pgConnectionConfigs = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+} else if (process.env.PROVIDER === 'AWS') {
   // determine how we connect to the remote Postgres server
   pgConnectionConfigs = {
     user: 'postgres',
