@@ -7,15 +7,15 @@ import methodOverride from 'method-override';
 import pg from 'pg';
 import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
-import aws from 'aws-sdk';
-import multerS3 from 'multer-s3';
+// import aws from 'aws-sdk';
+// import multerS3 from 'multer-s3';
 
 const PORT = process.env.PORT || 3004;
 
-const s3 = new aws.S3({
-  accessKeyId: process.env.ACCESSKEYID,
-  secretAccessKey: process.env.SECRETACCESSKEY,
-});
+// const s3 = new aws.S3({
+//   accessKeyId: process.env.ACCESSKEYID,
+//   secretAccessKey: process.env.SECRETACCESSKEY,
+// });
 
 const app = express();
 const SALT = 'i like cocomelon';
