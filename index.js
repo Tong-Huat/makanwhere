@@ -9,6 +9,10 @@ import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
 // import aws from 'aws-sdk';
 // import multerS3 from 'multer-s3';
+import bindRoutes from './routes.mjs';
+import areas from './areas.mjs';
+import * as auth from './auth.mjs';
+import getHash from './utility.mjs';
 
 const PORT = process.env.PORT || 3004;
 
@@ -40,26 +44,26 @@ app.use(cookieParser());
 //   }),
 // });
 
-const areas = [('Raffles Place, Cecil, Marina'),
-  ('Anson, Tanjong Pagar'),
-  ('Queenstown, Tiong Bahru, Telok Blangah, Harbourfront'),
-  ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
-  ('High Street, Beach Road, Middle Road, Golden Mile'),
-  ('Little India'),
-  ('Orchard, Cairnhill, River Valley'),
-  ('Ardmore, Bukit Timah, Holland Road, Tanglin'),
-  ('Watten Estate, Novena, Thomson'),
-  ('Balestier, Toa Payoh, Serangoon, Macpherson, Braddell'),
-  ('Geylang, Eunos, Katong, Joo Chiat, Amber Road'),
-  ('Bedok, Upper East Coast, Eastwood, Kew Drive'),
-  ('Loyang, Changi, Tampines, Pasir Ris'),
-  ('Serangoon Garden, Hougang, Punggol'),
-  ('Bishan, Ang Mo Kio'),
-  ('Jurong'),
-  ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
-  ('Kranji, Woodgrove'),
-  ('Upper Thomson, Springleaf, Yishun, Sembawang'),
-  ('Seletar')];
+// const areas = [('Raffles Place, Cecil, Marina'),
+//   ('Anson, Tanjong Pagar'),
+//   ('Queenstown, Tiong Bahru, Telok Blangah, Harbourfront'),
+//   ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
+//   ('High Street, Beach Road, Middle Road, Golden Mile'),
+//   ('Little India'),
+//   ('Orchard, Cairnhill, River Valley'),
+//   ('Ardmore, Bukit Timah, Holland Road, Tanglin'),
+//   ('Watten Estate, Novena, Thomson'),
+//   ('Balestier, Toa Payoh, Serangoon, Macpherson, Braddell'),
+//   ('Geylang, Eunos, Katong, Joo Chiat, Amber Road'),
+//   ('Bedok, Upper East Coast, Eastwood, Kew Drive'),
+//   ('Loyang, Changi, Tampines, Pasir Ris'),
+//   ('Serangoon Garden, Hougang, Punggol'),
+//   ('Bishan, Ang Mo Kio'),
+//   ('Jurong'),
+//   ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
+//   ('Kranji, Woodgrove'),
+//   ('Upper Thomson, Springleaf, Yishun, Sembawang'),
+//   ('Seletar')];
 
 // Initialise DB connection
 const { Pool } = pg;
@@ -95,86 +99,8 @@ if (process.env.DATABASE_URL) {
 const pool = new Pool(pgConnectionConfigs);
 
 // Auth Middleware
-const getHash = (input) => {
-  // create new SHA object
-  const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
 
-  // create an unhashed cookie string based on user ID and salt
-  const unhashedString = `${input}-${SALT}`;
-
-  // generate a hashed cookie string using SHA object
-  shaObj.update(unhashedString);
-
-  return shaObj.getHash('HEX');
-};
-
-app.use((request, response, next) => {
-  // set the default value
-  request.isUserLoggedIn = false;
-
-  // check to see if the cookies you need exists
-  if (request.cookies.loggedIn && request.cookies.userId) {
-    // get the hased value that should be inside the cookie
-    const hash = getHash(request.cookies.userId);
-
-    // test the value of the cookie
-    if (request.cookies.loggedIn === hash) {
-      request.isUserLoggedIn = true;
-    }
-  }
-
-  next();
-});
-
-// Auth middleware to restrict users only access
-const restrictToLoggedIn = (request, response, next) => {
-  // is the user logged in? Use the other middleware.
-  if (request.loggedIn === false) {
-    response.redirect('/login');
-  } else {
-    // The user is logged in. Get the user from the DB.
-    const userQuery = 'SELECT * FROM users WHERE id=$1';
-    pool.query(userQuery, [request.cookies.userId])
-      .then((userQueryResult) => {
-        // can't find the user based on their cookie.
-        if (userQueryResult.rows.length === 0) {
-          response.redirect('/login');
-          return;
-        }
-
-        // attach the DB query result to the request object.
-        request.user = userQueryResult.rows[0];
-
-        // go to the route callback.
-        next();
-      }).catch((error) => {
-        response.redirect('/login');
-      });
-  }
-};
-
-// CB for routes
-// CB to render welcome page
-const renderWelcomePage = (request, response) => {
-  console.log('welcome request came in');
-  response.render('welcome');
-};
-
-// CB to render all listing page
-const renderEstIndex = (request, response) => {
-  pool.query('SELECT * from Establishments', (error, result) => {
-    const data = result.rows;
-    const dataObj = { data };
-    console.log(data[0]);
-    const areaData = { areas };
-    console.log(areaData.areas[1]);
-    pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
-      const cuisineData = { cuisines: cuisineResult.rows };
-      // console.log(cuisineData);
-      response.render('index', { dataObj, areaData, cuisineData });
-    });
-  });
-};
+app.use(auth.setUserLogIn);
 
 // CB to render registration page
 const renderRegistration = (request, response) => {
@@ -285,25 +211,25 @@ const logout = (request, response) => {
   response.redirect('/');
 };
 
-const renderEstablishment = (request, response) => {
-  console.log('est request came in');
-  const { id } = request.params;
-  // get est data
-  pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
-    const estb = estbResult.rows[0];
-    // get all comments
-    pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
-      // const comments = commentResult.rows.map((commentsObj) => commentsObj.comment);
+// const renderEstablishment = (request, response) => {
+//   console.log('est request came in');
+//   const { id } = request.params;
+//   // get est data
+//   pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
+//     const estb = estbResult.rows[0];
+//     // get all comments
+//     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
+//       // const comments = commentResult.rows.map((commentsObj) => commentsObj.comment);
 
-      // const resultObj = commentResult.rows;
-      const content = {
-        estb, comments: commentResult.rows,
-      };
-      console.log('result:', commentResult.rows);
-      response.render('establishment', content);
-    });
-  });
-};
+//       // const resultObj = commentResult.rows;
+//       const content = {
+//         estb, comments: commentResult.rows,
+//       };
+//       console.log('result:', commentResult.rows);
+//       response.render('establishment', content);
+//     });
+//   });
+// };
 
 // CB to del note
 const deleteEst = (request, response) => {
@@ -476,22 +402,23 @@ const addComment = (request, response) => {
   });
 };
 
-app.get('/', renderWelcomePage);
-app.get('/listing', renderEstIndex);
+bindRoutes(app, pool);
+// app.get('/', renderWelcomePage);
+// app.get('/listing', renderEstIndex);
 app.get('/register', renderRegistration);
 app.post('/register', registerUser);
 app.get('/login', renderLogin);
 app.post('/login', loginAccount);
 app.get('/logout', logout);
-app.get('/listing/:id', renderEstablishment);
-app.delete('/listing/:id', restrictToLoggedIn, deleteEst);
-app.get('/add', restrictToLoggedIn, renderAddEst);
+// app.get('/listing/:id', renderEstablishment);
+app.delete('/listing/:id', auth.restrictToLoggedIn(pool), deleteEst);
+app.get('/add', auth.restrictToLoggedIn(pool), renderAddEst);
 app.post('/add', addEst);
-app.get('/listing/:id/edit', restrictToLoggedIn, renderEditPage);
+app.get('/listing/:id/edit', auth.restrictToLoggedIn(pool), renderEditPage);
 app.put('/listing/:id/edit', editPage);
-app.get('/surprise', restrictToLoggedIn, renderSurprise);
+app.get('/surprise', auth.restrictToLoggedIn(pool), renderSurprise);
 app.post('/surprise', getSurprise);
 app.post('/listing/:id', addComment);
-// app.get('/listing/:id/reservation', restrictToLoggedIn, renderReservationForm);
+// app.get('/listing/:id/reservation', restrictToLoggedIn(pool), renderReservationForm);
 // app.post reservation to be completed
 app.listen(PORT);
