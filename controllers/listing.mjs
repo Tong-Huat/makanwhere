@@ -77,25 +77,25 @@ const initListingController = (pool) => {
     });
   };
 
-  // const update = (request, response) => {
-  //   const { id } = request.params;
-  //   console.log(id);
-  //   const data = request.body;
-  //   console.log(data);
-  //   const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', area = '${data.area}', contact = '${data.contact}', cuisine = '${data.cuisines}' WHERE id = ${id} RETURNING *`;
+  const update = (request, response) => {
+    const { id } = request.params;
+    console.log(id);
+    const data = request.body;
+    console.log(data);
+    const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', area = '${data.area}', contact = '${data.contact}', cuisine = '${data.cuisines}' WHERE id = ${id} RETURNING *`;
 
-  //   pool.query(editQuery, (editQueryError, editQueryResult) => {
-  //     if (editQueryError) {
-  //       console.log('error1', editQueryError);
-  //     } else {
-  //       console.log(editQueryResult.rows);
-  //       response.redirect('/listing');
-  //     }
-  //   });
-  // };
+    pool.query(editQuery, (editQueryError, editQueryResult) => {
+      if (editQueryError) {
+        console.log('error1', editQueryError);
+      } else {
+        console.log(editQueryResult.rows);
+        response.redirect(`/listing/${id}`);
+      }
+    });
+  };
 
   return {
-    index, show, destroy, edit,
+    index, show, destroy, edit, update,
   };
 };
 

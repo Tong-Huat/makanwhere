@@ -169,52 +169,6 @@ const logout = (request, response) => {
   response.redirect('/');
 };
 
-// const renderEstablishment = (request, response) => {
-//   console.log('est request came in');
-//   const { id } = request.params;
-//   // get est data
-//   pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
-//     const estb = estbResult.rows[0];
-//     // get all comments
-//     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
-//       // const comments = commentResult.rows.map((commentsObj) => commentsObj.comment);
-
-//       // const resultObj = commentResult.rows;
-//       const content = {
-//         estb, comments: commentResult.rows,
-//       };
-//       console.log('result:', commentResult.rows);
-//       response.render('establishment', content);
-//     });
-//   });
-// };
-
-// CB to del note
-// const deleteEst = (request, response) => {
-//   // Remove element from DB at given index
-//   const { id } = request.params;
-//   console.log('id:', id);
-//   const getNoteDataQuery = `SELECT * FROM establishments WHERE id = ${id}`;
-//   pool.query(getNoteDataQuery, (getNoteDataQueryErr, getNoteDataQueryResult) => {
-//     if (getNoteDataQueryErr) {
-//       console.log('error', getNoteDataQueryErr);
-//     } else {
-//       const noteData = getNoteDataQueryResult.rows[0];
-//       console.log('note Data: ', noteData);
-
-//       const deleteNoteQuery = `DELETE FROM establishments WHERE id = ${id}`;
-//       pool.query(deleteNoteQuery, (deleteNoteError, deleteNoteResult) => {
-//         if (deleteNoteError) {
-//           console.log('error', deleteNoteError);
-//         } else
-//         {
-//           response.redirect('/listing');
-//         }
-//       });
-//     }
-//   });
-// };
-
 const renderAddEst = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
     const data = result.rows;
@@ -270,42 +224,6 @@ const addEst = (request, response) => {
           }
         });
       });
-      response.redirect('/listing');
-    }
-  });
-};
-
-// const renderEditPage = (request, response) => {
-//   console.log('edit request came in');
-//   const { id } = request.params;
-//   pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
-//     const estb = estbResult.rows[0];
-//     // get all comments
-//     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
-//       pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
-//         const cuisineData = { cuisines: cuisineResult.rows };
-//         const areaData = { areas };
-//         const content = {
-//           estb, cuisineData, areaData, comments: commentResult.rows,
-//         };
-//         response.render('editEst', content);
-//       });
-//     });
-//   });
-// };
-
-const editPage = (request, response) => {
-  const { id } = request.params;
-  console.log(id);
-  const data = request.body;
-  console.log(data);
-  const editQuery = `UPDATE establishments SET name = '${data.name}',  address = '${data.address}', area = '${data.area}', contact = '${data.contact}', cuisine = '${data.cuisines}' WHERE id = ${id} RETURNING *`;
-
-  pool.query(editQuery, (editQueryError, editQueryResult) => {
-    if (editQueryError) {
-      console.log('error1', editQueryError);
-    } else {
-      console.log(editQueryResult.rows);
       response.redirect('/listing');
     }
   });
@@ -373,7 +291,7 @@ app.get('/logout', logout);
 app.get('/add', auth.restrictToLoggedIn(pool), renderAddEst);
 app.post('/add', addEst);
 // app.get('/listing/:id/edit', auth.restrictToLoggedIn(pool), renderEditPage);
-app.put('/listing/:id/edit', editPage);
+// app.put('/listing/:id', editPage);
 app.get('/surprise', auth.restrictToLoggedIn(pool), renderSurprise);
 app.post('/surprise', getSurprise);
 app.post('/listing/:id', addComment);

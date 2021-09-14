@@ -12,5 +12,5 @@ export default function bindRoutes(app, pool) {
   app.get('/listing/:id', listingController.show);
   app.delete('/listing/:id', listingController.destroy);
   app.get('/listing/:id/edit', listingController.edit);
-  // app.put('/listing/:id/edit', listingController.update);
+  app.put('/listing/:id', listingController.update);
 }
