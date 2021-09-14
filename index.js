@@ -7,19 +7,12 @@ import methodOverride from 'method-override';
 import pg from 'pg';
 import jsSHA from 'jssha';
 import cookieParser from 'cookie-parser';
-// import aws from 'aws-sdk';
-// import multerS3 from 'multer-s3';
 import bindRoutes from './routes.mjs';
 import areas from './areas.mjs';
 import * as auth from './auth.mjs';
 import getHash from './utility.mjs';
 
 const PORT = process.env.PORT || 3004;
-
-// const s3 = new aws.S3({
-//   accessKeyId: process.env.ACCESSKEYID,
-//   secretAccessKey: process.env.SECRETACCESSKEY,
-// });
 
 const app = express();
 const SALT = 'i like cocomelon';
@@ -29,41 +22,6 @@ app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(cookieParser());
-
-// const multerUpload = multer({
-//   storage: multerS3({
-//     s3,
-//     bucket: 'makanwhere',
-//     acl: 'public-read',
-//     metadata: (request, file, callback) => {
-//       callback(null, { fieldName: file.fieldname });
-//     },
-//     key: (request, file, callback) => {
-//       callback(null, Date.now().toString());
-//     },
-//   }),
-// });
-
-// const areas = [('Raffles Place, Cecil, Marina'),
-//   ('Anson, Tanjong Pagar'),
-//   ('Queenstown, Tiong Bahru, Telok Blangah, Harbourfront'),
-//   ('Pasir Panjang, Hong Leong Garden, Clementi New Town'),
-//   ('High Street, Beach Road, Middle Road, Golden Mile'),
-//   ('Little India'),
-//   ('Orchard, Cairnhill, River Valley'),
-//   ('Ardmore, Bukit Timah, Holland Road, Tanglin'),
-//   ('Watten Estate, Novena, Thomson'),
-//   ('Balestier, Toa Payoh, Serangoon, Macpherson, Braddell'),
-//   ('Geylang, Eunos, Katong, Joo Chiat, Amber Road'),
-//   ('Bedok, Upper East Coast, Eastwood, Kew Drive'),
-//   ('Loyang, Changi, Tampines, Pasir Ris'),
-//   ('Serangoon Garden, Hougang, Punggol'),
-//   ('Bishan, Ang Mo Kio'),
-//   ('Jurong'),
-//   ('Hillview, Dairy Farm, Bukit Panjang, Choa Chu Kang'),
-//   ('Kranji, Woodgrove'),
-//   ('Upper Thomson, Springleaf, Yishun, Sembawang'),
-//   ('Seletar')];
 
 // Initialise DB connection
 const { Pool } = pg;
@@ -232,30 +190,30 @@ const logout = (request, response) => {
 // };
 
 // CB to del note
-const deleteEst = (request, response) => {
-  // Remove element from DB at given index
-  const { id } = request.params;
-  console.log('id:', id);
-  const getNoteDataQuery = `SELECT * FROM establishments WHERE id = ${id}`;
-  pool.query(getNoteDataQuery, (getNoteDataQueryErr, getNoteDataQueryResult) => {
-    if (getNoteDataQueryErr) {
-      console.log('error', getNoteDataQueryErr);
-    } else {
-      const noteData = getNoteDataQueryResult.rows[0];
-      console.log('note Data: ', noteData);
+// const deleteEst = (request, response) => {
+//   // Remove element from DB at given index
+//   const { id } = request.params;
+//   console.log('id:', id);
+//   const getNoteDataQuery = `SELECT * FROM establishments WHERE id = ${id}`;
+//   pool.query(getNoteDataQuery, (getNoteDataQueryErr, getNoteDataQueryResult) => {
+//     if (getNoteDataQueryErr) {
+//       console.log('error', getNoteDataQueryErr);
+//     } else {
+//       const noteData = getNoteDataQueryResult.rows[0];
+//       console.log('note Data: ', noteData);
 
-      const deleteNoteQuery = `DELETE FROM establishments WHERE id = ${id}`;
-      pool.query(deleteNoteQuery, (deleteNoteError, deleteNoteResult) => {
-        if (deleteNoteError) {
-          console.log('error', deleteNoteError);
-        } else
-        {
-          response.redirect('/listing');
-        }
-      });
-    }
-  });
-};
+//       const deleteNoteQuery = `DELETE FROM establishments WHERE id = ${id}`;
+//       pool.query(deleteNoteQuery, (deleteNoteError, deleteNoteResult) => {
+//         if (deleteNoteError) {
+//           console.log('error', deleteNoteError);
+//         } else
+//         {
+//           response.redirect('/listing');
+//         }
+//       });
+//     }
+//   });
+// };
 
 const renderAddEst = (request, response) => {
   pool.query('SELECT * from Establishments', (error, result) => {
@@ -317,24 +275,24 @@ const addEst = (request, response) => {
   });
 };
 
-const renderEditPage = (request, response) => {
-  console.log('edit request came in');
-  const { id } = request.params;
-  pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
-    const estb = estbResult.rows[0];
-    // get all comments
-    pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
-      pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
-        const cuisineData = { cuisines: cuisineResult.rows };
-        const areaData = { areas };
-        const content = {
-          estb, cuisineData, areaData, comments: commentResult.rows,
-        };
-        response.render('editEst', content);
-      });
-    });
-  });
-};
+// const renderEditPage = (request, response) => {
+//   console.log('edit request came in');
+//   const { id } = request.params;
+//   pool.query(`SELECT * FROM establishments WHERE id = ${id}`, (error, estbResult) => {
+//     const estb = estbResult.rows[0];
+//     // get all comments
+//     pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${id}`, (error, commentResult) => {
+//       pool.query('SELECT * FROM cuisines', (cuisineError, cuisineResult) => {
+//         const cuisineData = { cuisines: cuisineResult.rows };
+//         const areaData = { areas };
+//         const content = {
+//           estb, cuisineData, areaData, comments: commentResult.rows,
+//         };
+//         response.render('editEst', content);
+//       });
+//     });
+//   });
+// };
 
 const editPage = (request, response) => {
   const { id } = request.params;
@@ -411,14 +369,12 @@ app.get('/login', renderLogin);
 app.post('/login', loginAccount);
 app.get('/logout', logout);
 // app.get('/listing/:id', renderEstablishment);
-app.delete('/listing/:id', auth.restrictToLoggedIn(pool), deleteEst);
+// app.delete('/listing/:id', auth.restrictToLoggedIn(pool), deleteEst);
 app.get('/add', auth.restrictToLoggedIn(pool), renderAddEst);
 app.post('/add', addEst);
-app.get('/listing/:id/edit', auth.restrictToLoggedIn(pool), renderEditPage);
+// app.get('/listing/:id/edit', auth.restrictToLoggedIn(pool), renderEditPage);
 app.put('/listing/:id/edit', editPage);
 app.get('/surprise', auth.restrictToLoggedIn(pool), renderSurprise);
 app.post('/surprise', getSurprise);
 app.post('/listing/:id', addComment);
-// app.get('/listing/:id/reservation', restrictToLoggedIn(pool), renderReservationForm);
-// app.post reservation to be completed
 app.listen(PORT);
