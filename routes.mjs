@@ -13,4 +13,7 @@ export default function bindRoutes(app, pool) {
   app.delete('/listing/:id', listingController.destroy);
   app.get('/listing/:id/edit', listingController.edit);
   app.put('/listing/:id', listingController.update);
+  app.post('/listing/:id', listingController.comment);
+  app.get('/add', listingController.createForm);
+  app.post('/add', listingController.create);
 }
