@@ -61,48 +61,48 @@ const pool = new Pool(pgConnectionConfigs);
 app.use(auth.setUserLogIn);
 
 // CB to render registration page
-const renderRegistration = (request, response) => {
-  if (request.isUserLoggedIn === true) {
-    response.redirect('/listing');
-    return;
-  }
-  console.log('registration request came in');
-  response.render('register');
-};
+// const renderRegistration = (request, response) => {
+//   if (request.isUserLoggedIn === true) {
+//     response.redirect('/listing');
+//     return;
+//   }
+//   console.log('registration request came in');
+//   response.render('register');
+// };
 
 // CB to retrieve user's data for registration
-const registerUser = (request, response) => {
-  if (request.isUserLoggedIn === true) {
-    response.redirect('/listing');
-    return;
-  }
-  console.log('retrieving user data');
-  // initialise the jsSHA object
-  const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+// const registerUser = (request, response) => {
+//   if (request.isUserLoggedIn === true) {
+//     response.redirect('/listing');
+//     return;
+//   }
+//   console.log('retrieving user data');
+//   // initialise the jsSHA object
+//   const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
 
-  // TODO: further form validation
-  if (!request.body.email || !request.body.password) {
-    response.redirect('/register');
-  }
+//   // TODO: further form validation
+//   if (!request.body.email || !request.body.password) {
+//     response.redirect('/register');
+//   }
 
-  // input the password from the request to the SHA object
-  shaObj.update(request.body.password);
-  // get the hashed password as output from the SHA object
-  const hashedPassword = shaObj.getHash('HEX');
+//   // input the password from the request to the SHA object
+//   shaObj.update(request.body.password);
+//   // get the hashed password as output from the SHA object
+//   const hashedPassword = shaObj.getHash('HEX');
 
-  // store the hashed password in our DB
-  const data = request.body;
-  const values = [data.username, data.contact, data.email, hashedPassword];
+//   // store the hashed password in our DB
+//   const data = request.body;
+//   const values = [data.username, data.contact, data.email, hashedPassword];
 
-  const insertData = 'INSERT INTO users (username, contact, email, password) VALUES ($1, $2, $3, $4)';
+//   const insertData = 'INSERT INTO users (username, contact, email, password) VALUES ($1, $2, $3, $4)';
 
-  pool.query(insertData, values, (err, result) => {
-    if (err) {
-      return response.status(500).send(err); /* return error message if insert unsuccessful */
-    }
-    response.redirect('/login');
-  });
-};
+//   pool.query(insertData, values, (err, result) => {
+//     if (err) {
+//       return response.status(500).send(err); /* return error message if insert unsuccessful */
+//     }
+//     response.redirect('/login');
+//   });
+// };
 
 // CB to render login page
 const renderLogin = (request, response) => {
@@ -229,38 +229,38 @@ const logout = (request, response) => {
 //   });
 // };
 
-const renderSurprise = (request, response) => {
-  const areaData = { areas };
-  response.render('surprise', areaData);
-};
+// const renderSurprise = (request, response) => {
+//   const areaData = { areas };
+//   response.render('surprise', areaData);
+// };
 
-const getSurprise = (request, response) => {
-  const { area } = request.body;
-  console.log('area:', area);
+// const getSurprise = (request, response) => {
+//   const { area } = request.body;
+//   console.log('area:', area);
 
-  const surpriseQuery = `SELECT * FROM establishments WHERE area = '${area}'`;
-  pool.query(surpriseQuery, (surpriseQueryErr, surpriseQueryResult) => {
-    if (surpriseQueryErr) {
-      console.log('error', surpriseQueryErr);
-    } else {
-      const max = surpriseQueryResult.rows.length;
-      console.log(surpriseQueryResult.rows);
-      // eslint-disable-next-line prefer-const
-      let index = Math.floor(Math.random() * max);
-      console.log(index);
-      const surprise = [surpriseQueryResult.rows[index]];
-      console.log('surprise:', surprise);
-      const estb = surprise[0];
-      console.log('estb:', estb);
-      pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${estb.id}`, (error, commentResult) => {
-        const content = {
-          estb, comments: commentResult.rows,
-        };
-        response.render('establishment', content);
-      });
-    }
-  });
-};
+//   const surpriseQuery = `SELECT * FROM establishments WHERE area = '${area}'`;
+//   pool.query(surpriseQuery, (surpriseQueryErr, surpriseQueryResult) => {
+//     if (surpriseQueryErr) {
+//       console.log('error', surpriseQueryErr);
+//     } else {
+//       const max = surpriseQueryResult.rows.length;
+//       console.log(surpriseQueryResult.rows);
+//       // eslint-disable-next-line prefer-const
+//       let index = Math.floor(Math.random() * max);
+//       console.log(index);
+//       const surprise = [surpriseQueryResult.rows[index]];
+//       console.log('surprise:', surprise);
+//       const estb = surprise[0];
+//       console.log('estb:', estb);
+//       pool.query(`SELECT * FROM comments INNER JOIN USERS ON users.id = comments.user_id WHERE establishment_id = ${estb.id}`, (error, commentResult) => {
+//         const content = {
+//           estb, comments: commentResult.rows,
+//         };
+//         response.render('establishment', content);
+//       });
+//     }
+//   });
+// };
 
 // const addComment = (request, response) => {
 //   const { userId } = request.cookies;
@@ -281,8 +281,8 @@ const getSurprise = (request, response) => {
 bindRoutes(app, pool);
 // app.get('/', renderWelcomePage);
 // app.get('/listing', renderEstIndex);
-app.get('/register', renderRegistration);
-app.post('/register', registerUser);
+// app.get('/register', renderRegistration);
+// app.post('/register', registerUser);
 app.get('/login', renderLogin);
 app.post('/login', loginAccount);
 app.get('/logout', logout);
@@ -292,7 +292,7 @@ app.get('/logout', logout);
 // app.post('/add', addEst);
 // app.get('/listing/:id/edit', auth.restrictToLoggedIn(pool), renderEditPage);
 // app.put('/listing/:id', editPage);
-app.get('/surprise', auth.restrictToLoggedIn(pool), renderSurprise);
-app.post('/surprise', getSurprise);
+// app.get('/surprise', auth.restrictToLoggedIn(pool), renderSurprise);
+// app.post('/surprise', getSurprise);
 // app.post('/listing/:id', addComment);
 app.listen(PORT);

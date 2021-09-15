@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import areas from '../areas.mjs';
 
 const initListingController = (pool) => {
