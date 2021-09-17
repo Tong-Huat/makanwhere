@@ -3,7 +3,6 @@ import initWelcomeController from './controllers/welcome.mjs';
 import initAccountController from './controllers/account.mjs';
 import initSurpriseController from './controllers/surprise.mjs';
 import * as auth from './auth.mjs';
-import getHash from './utility.mjs';
 
 export default function bindRoutes(app, pool) {
   const welcomeController = initWelcomeController();
@@ -23,8 +22,9 @@ export default function bindRoutes(app, pool) {
   app.post('/add', auth.restrictToLoggedIn(pool), listingController.create);
   app.get('/surprise', auth.restrictToLoggedIn(pool), surpriseController.index);
   app.post('/surprise', surpriseController.show);
-
-  // register not working. need getHash somewhere
+  app.get('/login', accountController.createLogin);
+  app.post('/login', accountController.login);
+  app.get('/logout', accountController.logout);
   app.get('/register', accountController.createAcctForm);
   app.post('/register', accountController.createAcct);
 }

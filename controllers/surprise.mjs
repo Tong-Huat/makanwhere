@@ -18,9 +18,9 @@ const initSurpriseController = (pool) => {
         const max = surpriseQueryResult.rows.length;
         console.log(surpriseQueryResult.rows);
         // eslint-disable-next-line prefer-const
-        let index = Math.floor(Math.random() * max);
-        console.log(index);
-        const surprise = [surpriseQueryResult.rows[index]];
+        let num = Math.floor(Math.random() * max);
+        console.log(num);
+        const surprise = [surpriseQueryResult.rows[num]];
         console.log('surprise:', surprise);
         const estb = surprise[0];
         console.log('estb:', estb);
